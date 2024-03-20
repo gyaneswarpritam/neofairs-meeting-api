@@ -1,4 +1,5 @@
 // controllers/visitorController.js
+const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Visitor = require('../models/Visitor');
