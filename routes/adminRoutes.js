@@ -34,5 +34,7 @@ router.post('/fetch-all-exhibitor', passport.authenticate('jwt-admin', { session
     adminController.fetchAllExhibitor);
 router.put('/approve-visitor/:visitorId', passport.authenticate('jwt-admin', { session: false }),
     adminController.approveVisitor);
+router.put('/approve-exhibitor/:exhibitorId', passport.authenticate('jwt-admin', { session: false }),
+    adminController.approveExhibitor);
 
 module.exports = router;

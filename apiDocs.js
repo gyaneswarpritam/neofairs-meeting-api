@@ -417,6 +417,32 @@
  */
 /**
  * @swagger
+ * /api/admin/approve-exhibitor/{exhibitorId}:
+ *   put:
+ *     summary: Approve a exhibitor by the admin
+ *     tags:
+ *       - Admin
+ *     parameters:
+ *       - in: path
+ *         name: exhibitorId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the exhibitor to approve
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Exhibitor approved successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Auditorium:

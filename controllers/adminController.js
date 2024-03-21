@@ -194,15 +194,31 @@ exports.fetchAllExhibitor = async (req, res) => {
 };
 
 exports.approveVisitor = async (req, res) => {
+    console.log(req.params, '$$$$$$$$$$$$!!!!!!!')
     const { visitorId } = req.params;
     try {
-        const visitor = await Visitor.findByIdAndUpdate(visitorId, { approved: true }, { new: true });
+        const visitor = await Visitor.findByIdAndUpdate(visitorId, req.body, { new: true });
         if (!visitor) {
             return res.status(404).json({ message: 'Visitor not found' });
         }
-        await sendEmail(visitor.email, 'Approval Notification', 'Your registration has been approved.');
-        await sendSMS(visitor.phoneNumber, 'Congratulations! Your registration has been approved.');
+        // await sendEmail(visitor.email, 'Approval Notification', 'Your registration has been approved.');
+        // await sendSMS(visitor.phoneNumber, 'Congratulations! Your registration has been approved.');
         res.json({ message: 'Visitor approved successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+exports.approveExhibitor = async (req, res) => {
+    const { exhibitorId } = req.params;
+    try {
+        const exhibitor = await Exhibitor.findByIdAndUpdate(exhibitorId, req.body, { new: true });
+        if (!exhibitor) {
+            return res.status(404).json({ message: 'Exhibitor not found' });
+        }
+        // await sendEmail(exhibitor.email, 'Approval Notification', 'Your registration has been approved.');
+        // await sendSMS(exhibitor.phoneNumber, 'Congratulations! Your registration has been approved.');
+        res.json({ message: 'Exhibitor approved successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
