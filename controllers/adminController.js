@@ -13,7 +13,6 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.register = async (req, res) => {
     try {
         const validation = schemaValidator(adminSchema, req.body);
-        console.log(validation, '@@@@@@@@@@@@@@@!!!!!!!!!!')
         if (validation.success) {
             const { email, password, username } = req.body;
 
@@ -50,37 +49,42 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const validation = schemaValidator(adminSchema, req.body);
+        if (validation.success) {
+            const { email, password } = req.body;
 
-        // Find admin by email
-        const admin = await Admin.findOne({ email });
-        if (!admin) {
-            return res.status(404).json({ message: 'Admin not found' });
-        }
+            // Find admin by email
+            const admin = await Admin.findOne({ email, active: true });
+            if (!admin) {
+                return res.status(404).json({ message: 'Admin not found' });
+            }
 
-        // Check password
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (isMatch) {
-            // Create JWT Payload
-            const payload = {
-                id: admin.id,
-                email: admin.email
-            };
+            // Check password
+            const isMatch = await bcrypt.compare(password, admin.password);
+            if (isMatch) {
+                // Create JWT Payload
+                const payload = {
+                    id: admin.id,
+                    email: admin.email
+                };
 
-            // Sign token
-            jwt.sign(
-                payload,
-                config.jwtSecret,
-                { expiresIn: 3600 },
-                (err, token) => {
-                    res.json({
-                        success: true,
-                        token: 'Bearer ' + token
-                    });
-                }
-            );
+                // Sign token
+                jwt.sign(
+                    payload,
+                    config.jwtSecret,
+                    { expiresIn: 3600 },
+                    (err, token) => {
+                        res.json({
+                            success: true,
+                            token: 'Bearer ' + token
+                        });
+                    }
+                );
+            } else {
+                return res.status(400).json({ message: 'Username/Password is incorrect' });
+            }
         } else {
-            return res.status(400).json({ message: 'Username/Password is incorrect' });
+            res.status(401).json({ message: validation.errors });
         }
     } catch (error) {
         console.error(error);
@@ -90,8 +94,48 @@ exports.login = async (req, res) => {
 
 exports.fetchAllVisitor = async (req, res) => {
     try {
-        const allVisitors = await Visitor.find();
-        res.json({ data: allVisitors });
+        const reqBody = req.body;
+        const resultsPerPage =
+            reqBody["itemPerPage"] > 0 ? reqBody["itemPerPage"] : 10;
+        const page = reqBody["page"] >= 1 ? reqBody["page"] : 1;
+        const skip = resultsPerPage * (page - 1);
+        const search = {};
+        search["_id"] = { $ne: req.authID };
+        search["deleted"] = { $ne: true };
+        if (reqBody["email"]) {
+            search["email"] = reqBody["email"];
+        }
+        if (reqBody["firstName"]) {
+            search["firstName"] = { $regex: reqBody["firstName"], $options: "i" };
+        }
+        if (reqBody["phoneNo"]) {
+            search["phoneNo"] = reqBody["phoneNo"];
+        }
+        if (typeof reqBody["active"] === "boolean") {
+            search["active"] = reqBody["active"];
+        }
+        if (typeof reqBody["blocked"] === "boolean") {
+            search["blocked"] = reqBody["blocked"];
+        }
+        if (typeof reqBody["reject"] === "boolean") {
+            search["reject"] = reqBody["reject"];
+        }
+        const totalrecords = await Visitor.countDocuments(search);
+        const records = await Visitor.find(search)
+            .skip(skip)
+            .limit(resultsPerPage)
+            .lean();
+        resp = {
+            status: 200,
+            message: "List of Visitors",
+            data: records,
+            totalCount: totalrecords,
+            totalPages: parseInt(Math.ceil(totalrecords / resultsPerPage)),
+        };
+        res.status(resp.status).send(resp);
+        // console.log(req.query, '****************88')
+        // const allVisitors = await Visitor.find();
+        // res.json({ data: allVisitors });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -99,8 +143,48 @@ exports.fetchAllVisitor = async (req, res) => {
 };
 exports.fetchAllExhibitor = async (req, res) => {
     try {
-        const allExhibitors = await Exhibitor.find();
-        res.json({ data: allExhibitors });
+        const reqBody = req.body;
+        const resultsPerPage =
+            reqBody["itemPerPage"] > 0 ? reqBody["itemPerPage"] : 10;
+        const page = reqBody["page"] >= 1 ? reqBody["page"] : 1;
+        const skip = resultsPerPage * (page - 1);
+        const search = {};
+        search["_id"] = { $ne: req.authID };
+        search["deleted"] = { $ne: true };
+        if (reqBody["email"]) {
+            search["email"] = reqBody["email"];
+        }
+        if (reqBody["firstName"]) {
+            search["firstName"] = { $regex: reqBody["firstName"], $options: "i" };
+        }
+        if (reqBody["phoneNo"]) {
+            search["phoneNo"] = reqBody["phoneNo"];
+        }
+        if (typeof reqBody["active"] === "boolean") {
+            search["active"] = reqBody["active"];
+        }
+        if (typeof reqBody["blocked"] === "boolean") {
+            search["blocked"] = reqBody["blocked"];
+        }
+        if (typeof reqBody["reject"] === "boolean") {
+            search["reject"] = reqBody["reject"];
+        }
+        const totalrecords = await Exhibitor.countDocuments(search);
+        const records = await Exhibitor.find(search)
+            .skip(skip)
+            .limit(resultsPerPage)
+            .lean();
+        resp = {
+            status: 200,
+            message: "List of Exhibitors",
+            data: records,
+            totalCount: totalrecords,
+            totalPages: parseInt(Math.ceil(totalrecords / resultsPerPage)),
+        };
+        res.status(resp.status).send(resp);
+
+        // const allExhibitors = await Exhibitor.find();
+        // res.json({ data: allExhibitors });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

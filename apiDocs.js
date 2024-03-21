@@ -342,12 +342,17 @@
 /**
  * @swagger
  * /api/admin/fetch-all-visitor:
- *   get:
+ *   post:
  *     summary: Fetch all registered visitors
  *     tags:
  *       - Admin
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
  *     responses:
  *       '200':
  *         description: Successful response
@@ -362,7 +367,7 @@
 /**
  * @swagger
  * /api/admin/fetch-all-exhibitor:
- *   get:
+ *   post:
  *     summary: Fetch all registered exhibitors
  *     tags:
  *       - Admin
