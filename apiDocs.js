@@ -373,6 +373,11 @@
  *       - Admin
  *     security:
  *       - bearerAuth: []
+  *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
  *     responses:
  *       '200':
  *         description: Successful response

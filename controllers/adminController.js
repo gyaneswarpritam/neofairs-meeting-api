@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
                 jwt.sign(
                     payload,
                     config.jwtSecret,
-                    { expiresIn: 3600 },
+                    { expiresIn: '3650d' },
                     (err, token) => {
                         res.json({
                             success: true,
@@ -95,6 +95,7 @@ exports.login = async (req, res) => {
 exports.fetchAllVisitor = async (req, res) => {
     try {
         const reqBody = req.body;
+        const { active, blocked, reject } = req.query;
         const resultsPerPage =
             reqBody["itemPerPage"] > 0 ? reqBody["itemPerPage"] : 10;
         const page = reqBody["page"] >= 1 ? reqBody["page"] : 1;
@@ -111,14 +112,14 @@ exports.fetchAllVisitor = async (req, res) => {
         if (reqBody["phoneNo"]) {
             search["phoneNo"] = reqBody["phoneNo"];
         }
-        if (typeof reqBody["active"] === "boolean") {
-            search["active"] = reqBody["active"];
+        if (active !== undefined) {
+            search["active"] = active;
         }
-        if (typeof reqBody["blocked"] === "boolean") {
-            search["blocked"] = reqBody["blocked"];
+        if (blocked !== undefined) {
+            search["blocked"] = blocked;
         }
-        if (typeof reqBody["reject"] === "boolean") {
-            search["reject"] = reqBody["reject"];
+        if (reject !== undefined) {
+            search["reject"] = reject;
         }
         const totalrecords = await Visitor.countDocuments(search);
         const records = await Visitor.find(search)
@@ -144,6 +145,7 @@ exports.fetchAllVisitor = async (req, res) => {
 exports.fetchAllExhibitor = async (req, res) => {
     try {
         const reqBody = req.body;
+        const { active, blocked, reject } = req.query;
         const resultsPerPage =
             reqBody["itemPerPage"] > 0 ? reqBody["itemPerPage"] : 10;
         const page = reqBody["page"] >= 1 ? reqBody["page"] : 1;
@@ -160,14 +162,14 @@ exports.fetchAllExhibitor = async (req, res) => {
         if (reqBody["phoneNo"]) {
             search["phoneNo"] = reqBody["phoneNo"];
         }
-        if (typeof reqBody["active"] === "boolean") {
-            search["active"] = reqBody["active"];
+        if (active !== undefined) {
+            search["active"] = active;
         }
-        if (typeof reqBody["blocked"] === "boolean") {
-            search["blocked"] = reqBody["blocked"];
+        if (blocked !== undefined) {
+            search["blocked"] = blocked;
         }
-        if (typeof reqBody["reject"] === "boolean") {
-            search["reject"] = reqBody["reject"];
+        if (reject !== undefined) {
+            search["reject"] = reject;
         }
         const totalrecords = await Exhibitor.countDocuments(search);
         const records = await Exhibitor.find(search)
