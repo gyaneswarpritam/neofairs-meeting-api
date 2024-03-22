@@ -197,6 +197,14 @@ exports.approveVisitor = async (req, res) => {
     console.log(req.params, '$$$$$$$$$$$$!!!!!!!')
     const { visitorId } = req.params;
     try {
+        // Check if the request body contains a password
+        if (req.body.password) {
+            // Hash the password using bcrypt
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+            // Update the password in the req.body with the hashed password
+            req.body.password = hashedPassword;
+        }
         const visitor = await Visitor.findByIdAndUpdate(visitorId, req.body, { new: true });
         if (!visitor) {
             return res.status(404).json({ message: 'Visitor not found' });
@@ -212,6 +220,14 @@ exports.approveVisitor = async (req, res) => {
 exports.approveExhibitor = async (req, res) => {
     const { exhibitorId } = req.params;
     try {
+        // Check if the request body contains a password
+        if (req.body.password) {
+            // Hash the password using bcrypt
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+            // Update the password in the req.body with the hashed password
+            req.body.password = hashedPassword;
+        }
         const exhibitor = await Exhibitor.findByIdAndUpdate(exhibitorId, req.body, { new: true });
         if (!exhibitor) {
             return res.status(404).json({ message: 'Exhibitor not found' });

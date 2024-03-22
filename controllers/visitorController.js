@@ -6,7 +6,7 @@ const Visitor = require('../models/Visitor');
 const authService = require('../services/authService');
 const config = require('../config/config');
 const schemaValidator = require('../validators/schemaValidator');
-const visitorSchema = require('../validators/visitorValidator');
+const { visitorSchema, visitorLoginSchema } = require('../validators/visitorValidator');
 
 exports.register = async (req, res) => {
     try {
@@ -36,15 +36,47 @@ exports.register = async (req, res) => {
     }
 };
 
-exports.login = (req, res, next) => {
-    passport.authenticate('visitor-login', { session: false }, (err, visitor, info) => {
-        if (err) {
-            return res.status(500).json({ message: 'Internal server error' });
+exports.login = async (req, res, next) => {
+    try {
+        const validation = schemaValidator(visitorLoginSchema, req.body);
+        if (validation.success) {
+            const { email, password } = req.body;
+
+            // Find admin by email
+            const visitor = await Visitor.findOne({ email, active: true });
+            if (!visitor) {
+                return res.status(404).json({ message: 'Visitor not found' });
+            }
+
+            // Check password
+            const isMatch = await bcrypt.compare(password, visitor.password);
+            if (isMatch) {
+                // Create JWT Payload
+                const payload = {
+                    id: visitor.id,
+                    email: visitor.email
+                };
+
+                // Sign token
+                jwt.sign(
+                    payload,
+                    config.jwtSecret,
+                    { expiresIn: '3650d' },
+                    (err, token) => {
+                        res.json({
+                            success: true,
+                            token: 'Bearer ' + token
+                        });
+                    }
+                );
+            } else {
+                return res.status(400).json({ message: 'Username/Password is incorrect' });
+            }
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        if (!visitor) {
-            return res.status(401).json({ message: 'Incorrect email or password' });
-        }
-        const token = jwt.sign({ sub: visitor._id }, config.jwtSecret);
-        res.json({ token });
-    })(req, res, next);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 };

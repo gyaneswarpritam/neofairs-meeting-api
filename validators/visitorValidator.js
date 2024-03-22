@@ -13,4 +13,9 @@ const visitorSchema = z.object({
     phoneNo: z.string().min(1, { message: 'phoneNo is required.' }),
 });
 
-module.exports = visitorSchema;
+const visitorLoginSchema = z.object({
+    email: z.string().min(1, { message: 'email is required.' }).email('Invalid email address.'),
+    password: z.string().min(1, { message: 'Password is required.' })
+});
+
+module.exports = { visitorSchema, visitorLoginSchema };
