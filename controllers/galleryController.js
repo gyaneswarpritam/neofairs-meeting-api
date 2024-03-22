@@ -1,5 +1,6 @@
 // controllers/galleryController.js
 const Gallery = require('../models/Gallery');
+const { successResponse } = require('../utils/sendResponse');
 const gallerySchema = require('../validators/galleryValidator');
 const schemaValidator = require('../validators/schemaValidator');
 

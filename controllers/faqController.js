@@ -1,5 +1,6 @@
 // controllers/faqController.js
 const Faq = require('../models/Faq');
+const { successResponse } = require('../utils/sendResponse');
 const faqSchema = require('../validators/faqValidator');
 const schemaValidator = require('../validators/schemaValidator');
 

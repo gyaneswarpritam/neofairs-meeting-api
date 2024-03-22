@@ -1,5 +1,6 @@
 // controllers/liveController.js
 const Live = require('../models/Live');
+const { successResponse } = require('../utils/sendResponse');
 const liveSchema = require('../validators/liveValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
@@ -24,7 +25,8 @@ exports.getAllLive = async (req, res) => {
         if (!live) {
             return res.status(404).json({ message: 'Live not found' });
         }
-        res.json(live);
+        const successObj = successResponse('Live List', live)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

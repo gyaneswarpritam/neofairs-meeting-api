@@ -2,6 +2,7 @@
 const StallVideo = require('../models/StallVideo');
 const stallVideoSchema = require('../validators/stallVideoValidator');
 const schemaValidator = require('../validators/schemaValidator');
+const { successResponse } = require('../utils/sendResponse');
 
 exports.createStallVideo = async (req, res) => {
     try {

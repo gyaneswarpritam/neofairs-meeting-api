@@ -1,5 +1,6 @@
 // controllers/productController.js
 const Product = require('../models/Product');
+const { successResponse } = require('../utils/sendResponse');
 const productSchema = require('../validators/productValidator');
 const schemaValidator = require('../validators/schemaValidator');
 

@@ -1,5 +1,6 @@
 // controllers/eventController.js
 const Event = require('../models/Event');
+const { successResponse } = require('../utils/sendResponse');
 const eventSchema = require('../validators/eventValidator');
 const schemaValidator = require('../validators/schemaValidator');
 

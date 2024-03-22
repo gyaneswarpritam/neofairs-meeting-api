@@ -1,5 +1,6 @@
 // controllers/mediaController.js
 const Media = require('../models/Media');
+const { successResponse } = require('../utils/sendResponse');
 const mediaSchema = require('../validators/mediaValidator');
 const schemaValidator = require('../validators/schemaValidator');
 

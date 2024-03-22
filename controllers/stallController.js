@@ -2,6 +2,7 @@
 const Stall = require('../models/Stall');
 const stallSchema = require('../validators/stallValidator');
 const schemaValidator = require('../validators/schemaValidator');
+const { successResponse } = require('../utils/sendResponse');
 
 exports.createStall = async (req, res) => {
     try {

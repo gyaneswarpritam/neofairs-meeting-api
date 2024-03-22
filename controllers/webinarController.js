@@ -2,6 +2,7 @@
 const Webinar = require('../models/Webinar');
 const webinarSchema = require('../validators/webinarValidator');
 const schemaValidator = require('../validators/schemaValidator');
+const { successResponse } = require('../utils/sendResponse');
 
 exports.createWebinar = async (req, res) => {
     try {

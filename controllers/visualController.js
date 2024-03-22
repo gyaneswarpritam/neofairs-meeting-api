@@ -2,6 +2,7 @@
 const Visual = require('../models/Visual');
 const visualSchema = require('../validators/visualValidator');
 const schemaValidator = require('../validators/schemaValidator');
+const { successResponse } = require('../utils/sendResponse');
 
 exports.createVisual = async (req, res) => {
     try {
