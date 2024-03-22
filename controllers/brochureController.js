@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createBrochure = async (req, res) => {
     try {
         const validatedData = schemaValidator(brochureSchema, req.body);
-        const brochure = await Brochure.create(validatedData);
-        res.status(201).json(brochure);
+        if (validatedData.success) {
+            const brochure = await Brochure.create(validatedData.data);
+            const successObj = successResponse('Brochure Created', brochure)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -40,11 +45,16 @@ exports.getBrochureById = async (req, res) => {
 exports.updateBrochure = async (req, res) => {
     try {
         const validatedData = schemaValidator(brochureSchema, req.body);
-        const brochure = await Brochure.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!brochure) {
-            return res.status(404).json({ message: 'Brochure not found' });
+        if (validatedData.success) {
+            const brochure = await Brochure.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!brochure) {
+                return res.status(404).json({ message: 'Brochure not found' });
+            }
+            const successObj = successResponse('Brochure updated', brochure)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(brochure);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createVisual = async (req, res) => {
     try {
         const validatedData = schemaValidator(visualSchema, req.body);
-        const visual = await Visual.create(validatedData);
-        res.status(201).json(visual);
+        if (validatedData.success) {
+            const visual = await Visual.create(validatedData.data);
+            const successObj = successResponse('Visual Created', visual)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -40,11 +45,16 @@ exports.getVisualById = async (req, res) => {
 exports.updateVisual = async (req, res) => {
     try {
         const validatedData = schemaValidator(visualSchema, req.body);
-        const visual = await Visual.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!visual) {
-            return res.status(404).json({ message: 'Visual entry not found' });
-        }
-        res.json(visual);
+        if (validatedData.success) {
+            const visual = await Visual.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!visual) {
+                return res.status(404).json({ message: 'Visual entry not found' });
+            }
+            const successObj = successResponse('Visual updated', visual)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        };
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

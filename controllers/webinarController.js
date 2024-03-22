@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createWebinar = async (req, res) => {
     try {
         const validatedData = schemaValidator(webinarSchema, req.body);
-        const webinar = await Webinar.create(validatedData);
-        res.status(201).json(webinar);
+        if (validatedData.success) {
+            const webinar = await Webinar.create(validatedData.data);
+            const successObj = successResponse('Webinar Created', webinar)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -40,11 +45,16 @@ exports.getWebinarById = async (req, res) => {
 exports.updateWebinar = async (req, res) => {
     try {
         const validatedData = schemaValidator(webinarSchema, req.body);
-        const webinar = await Webinar.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!webinar) {
-            return res.status(404).json({ message: 'Webinar entry not found' });
-        }
-        res.json(webinar);
+        if (validatedData.success) {
+            const webinar = await Webinar.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!webinar) {
+                return res.status(404).json({ message: 'Webinar entry not found' });
+            }
+            const successObj = successResponse('Webinar updated', webinar)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        };
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createEvent = async (req, res) => {
     try {
         const validatedData = schemaValidator(eventSchema, req.body);
-        const event = await Event.create(validatedData);
-        res.status(201).json(event);
+        if (validatedData.success) {
+            const event = await Event.create(validatedData.data);
+            const successObj = successResponse('Event Created', event)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -40,11 +45,16 @@ exports.getEventById = async (req, res) => {
 exports.updateEvent = async (req, res) => {
     try {
         const validatedData = schemaValidator(eventSchema, req.body);
-        const event = await Event.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!event) {
-            return res.status(404).json({ message: 'Event not found' });
+        if (validatedData.success) {
+            const event = await Event.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!event) {
+                return res.status(404).json({ message: 'Event not found' });
+            }
+            const successObj = successResponse('Event updated', event)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(event);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

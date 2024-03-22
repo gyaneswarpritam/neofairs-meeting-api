@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createFaq = async (req, res) => {
     try {
         const validatedData = schemaValidator(faqSchema, req.body);
-        const faq = await Faq.create(validatedData);
-        res.status(201).json(faq);
+        if (validatedData.success) {
+            const faq = await Faq.create(validatedData.data);
+            const successObj = successResponse('Faq Created', faq)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -40,11 +45,16 @@ exports.getFaqById = async (req, res) => {
 exports.updateFaq = async (req, res) => {
     try {
         const validatedData = schemaValidator(faqSchema, req.body);
-        const faq = await Faq.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!faq) {
-            return res.status(404).json({ message: 'FAQ entry not found' });
+        if (validatedData.success) {
+            const faq = await Faq.findByIdAndUpdate(req.params.id, validatedData, { new: true });
+            if (!faq) {
+                return res.status(404).json({ message: 'FAQ entry not found' });
+            }
+            const successObj = successResponse('Faq updated', faq)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(faq);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

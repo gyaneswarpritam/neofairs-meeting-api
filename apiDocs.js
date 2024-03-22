@@ -1455,23 +1455,15 @@
  *     Hall:
  *       type: object
  *       properties:
- *         _id:
- *           type: string
- *           description: The unique identifier of the hall.
  *         name:
  *           type: string
  *           description: The name of the hall.
  *         description:
  *           type: string
  *           description: The description of the hall.
- *         active:
- *           type: string
- *           description: Indicates whether the hall is active.
- *         deleted:
- *           type: string
- *           description: Indicates whether the hall is deleted.
  *       required:
  *         - name
+ *         - description
  */
 
 /**

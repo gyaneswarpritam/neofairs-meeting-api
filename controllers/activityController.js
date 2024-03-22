@@ -8,10 +8,8 @@ exports.createActivity = async (req, res) => {
         const validatedData = schemaValidator(activitySchema, req.body);
         if (validatedData.success) {
             const activity = await Activity.create(validatedData.data);
-            res.status(201).json(activity);
-
-            // Respond with success message
-            res.status(201).json({ message: 'Visitor registered successfully' });
+            const successObj = successResponse('Activity Created', activity)
+            res.status(successObj.status).send(successObj);
         } else {
             res.status(401).json({ message: validatedData.errors });
         }

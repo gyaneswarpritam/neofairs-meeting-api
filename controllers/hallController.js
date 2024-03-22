@@ -1,13 +1,19 @@
 // controllers/hallController.js
 const Hall = require('../models/Hall');
+const { successResponse } = require('../utils/sendResponse');
 const hallSchema = require('../validators/hallValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
 exports.createHall = async (req, res) => {
     try {
         const validatedData = schemaValidator(hallSchema, req.body);
-        const hall = await Hall.create(validatedData);
-        res.status(201).json(hall);
+        if (validatedData.success) {
+            const hall = await Hall.create(validatedData.data);
+            const successObj = successResponse('Hall Created', hall)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -19,7 +25,8 @@ exports.getAllHall = async (req, res) => {
         if (!hall) {
             return res.status(404).json({ message: 'Hall not found' });
         }
-        res.json(hall);
+        const successObj = successResponse('Hall List', hall)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -31,7 +38,8 @@ exports.getHallById = async (req, res) => {
         if (!hall) {
             return res.status(404).json({ message: 'Hall entry not found' });
         }
-        res.json(hall);
+        const successObj = successResponse('Hall Details', hall)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -40,11 +48,16 @@ exports.getHallById = async (req, res) => {
 exports.updateHall = async (req, res) => {
     try {
         const validatedData = schemaValidator(hallSchema, req.body);
-        const hall = await Hall.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!hall) {
-            return res.status(404).json({ message: 'Hall entry not found' });
+        if (validatedData.success) {
+            const hall = await Hall.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!hall) {
+                return res.status(404).json({ message: 'Hall entry not found' });
+            }
+            const successObj = successResponse('Hall updated', hall)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(hall);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createDirectory = async (req, res) => {
     try {
         const validatedData = schemaValidator(directorySchema, req.body);
-        const directory = await Directory.create(validatedData);
-        res.status(201).json(directory);
+        if (validatedData.success) {
+            const directory = await Directory.create(validatedData.data);
+            const successObj = successResponse('Directory Created', directory)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -40,11 +45,16 @@ exports.getDirectoryById = async (req, res) => {
 exports.updateDirectory = async (req, res) => {
     try {
         const validatedData = schemaValidator(directorySchema, req.body);
-        const directory = await Directory.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!directory) {
-            return res.status(404).json({ message: 'Directory entry not found' });
+        if (validatedData.success) {
+            const directory = await Directory.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!directory) {
+                return res.status(404).json({ message: 'Directory entry not found' });
+            }
+            const successObj = successResponse('Directory updated', directory)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(directory);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

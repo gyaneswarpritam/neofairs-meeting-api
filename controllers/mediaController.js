@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createMedia = async (req, res) => {
     try {
         const validatedData = schemaValidator(mediaSchema, req.body);
-        const media = await Media.create(validatedData);
-        res.status(201).json(media);
+        if (validatedData.success) {
+            const media = await Media.create(validatedData.data);
+            const successObj = successResponse('Media Created', media)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -28,11 +33,16 @@ exports.getMediaById = async (req, res) => {
 exports.updateMedia = async (req, res) => {
     try {
         const validatedData = schemaValidator(mediaSchema, req.body);
-        const media = await Media.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!media) {
-            return res.status(404).json({ message: 'Media entry not found' });
+        if (validatedData.success) {
+            const media = await Media.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!media) {
+                return res.status(404).json({ message: 'Media entry not found' });
+            }
+            const successObj = successResponse('Media updated', media)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(media);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

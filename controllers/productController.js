@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createProduct = async (req, res) => {
     try {
         const validatedData = schemaValidator(productSchema, req.body);
-        const product = await Product.create(validatedData);
-        res.status(201).json(product);
+        if (validatedData.success) {
+            const product = await Product.create(validatedData.data);
+            const successObj = successResponse('Product Created', product)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -28,11 +33,16 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const validatedData = schemaValidator(productSchema, req.body);
-        const product = await Product.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!product) {
-            return res.status(404).json({ message: 'Product entry not found' });
+        if (validatedData.success) {
+            const product = await Product.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!product) {
+                return res.status(404).json({ message: 'Product entry not found' });
+            }
+            const successObj = successResponse('Product updated', product)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

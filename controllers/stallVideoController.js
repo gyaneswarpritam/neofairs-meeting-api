@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createStallVideo = async (req, res) => {
     try {
         const validatedData = schemaValidator(stallVideoSchema, req.body);
-        const stallVideo = await StallVideo.create(validatedData);
-        res.status(201).json(stallVideo);
+        if (validatedData.success) {
+            const stallVideo = await StallVideo.create(validatedData.data);
+            const successObj = successResponse('Stall Video Created', stallVideo)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -28,11 +33,16 @@ exports.getStallVideoById = async (req, res) => {
 exports.updateStallVideo = async (req, res) => {
     try {
         const validatedData = schemaValidator(stallVideoSchema, req.body);
-        const stallVideo = await StallVideo.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!stallVideo) {
-            return res.status(404).json({ message: 'Stall video entry not found' });
+        if (validatedData.success) {
+            const stallVideo = await StallVideo.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!stallVideo) {
+                return res.status(404).json({ message: 'Stall video entry not found' });
+            }
+            const successObj = successResponse('Stall Video updated', stallVideo)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(stallVideo);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

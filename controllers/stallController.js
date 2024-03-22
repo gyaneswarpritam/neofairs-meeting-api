@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createStall = async (req, res) => {
     try {
         const validatedData = schemaValidator(stallSchema, req.body);
-        const stall = await Stall.create(validatedData);
-        res.status(201).json(stall);
+        if (validatedData.success) {
+            const stall = await Stall.create(validatedData.data);
+            const successObj = successResponse('Stall Created', stall)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -28,11 +33,16 @@ exports.getStallById = async (req, res) => {
 exports.updateStall = async (req, res) => {
     try {
         const validatedData = schemaValidator(stallSchema, req.body);
-        const stall = await Stall.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!stall) {
-            return res.status(404).json({ message: 'Stall entry not found' });
+        if (validatedData.success) {
+            const stall = await Stall.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!stall) {
+                return res.status(404).json({ message: 'Stall entry not found' });
+            }
+            const successObj = successResponse('Stall updated', stall)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(stall);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

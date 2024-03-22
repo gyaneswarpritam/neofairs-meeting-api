@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createAuditorium = async (req, res) => {
     try {
         const validatedData = schemaValidator(auditoriumSchema, req.body);
-        const auditorium = await Auditorium.create(validatedData);
-        res.status(201).json(auditorium);
+        if (validatedData.success) {
+            const auditorium = await Auditorium.create(validatedData.data);
+            const successObj = successResponse('Auditorium created', auditorium)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -40,11 +45,16 @@ exports.getAuditoriumById = async (req, res) => {
 exports.updateAuditorium = async (req, res) => {
     try {
         const validatedData = schemaValidator(auditoriumSchema, req.body);
-        const auditorium = await Auditorium.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!auditorium) {
-            return res.status(404).json({ message: 'Auditorium not found' });
+        if (validatedData.success) {
+            const auditorium = await Auditorium.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!auditorium) {
+                return res.status(404).json({ message: 'Auditorium not found' });
+            }
+            const successObj = successResponse('Auditorium updated', auditorium)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(auditorium);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createGallery = async (req, res) => {
     try {
         const validatedData = schemaValidator(gallerySchema, req.body);
-        const gallery = await Gallery.create(validatedData);
-        res.status(201).json(gallery);
+        if (validatedData.success) {
+            const gallery = await Gallery.create(validatedData.data);
+            const successObj = successResponse('Gallery Created', gallery)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -28,11 +33,16 @@ exports.getGalleryById = async (req, res) => {
 exports.updateGallery = async (req, res) => {
     try {
         const validatedData = schemaValidator(gallerySchema, req.body);
-        const gallery = await Gallery.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!gallery) {
-            return res.status(404).json({ message: 'Gallery entry not found' });
+        if (validatedData.success) {
+            const gallery = await Gallery.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!gallery) {
+                return res.status(404).json({ message: 'Gallery entry not found' });
+            }
+            const successObj = successResponse('Gallery updated', gallery)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(gallery);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

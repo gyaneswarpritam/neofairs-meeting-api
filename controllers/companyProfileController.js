@@ -6,8 +6,13 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createCompanyProfile = async (req, res) => {
     try {
         const validatedData = schemaValidator(companyProfileSchema, req.body);
-        const companyProfile = await CompanyProfile.create(validatedData);
-        res.status(201).json(companyProfile);
+        if (validatedData.success) {
+            const companyProfile = await CompanyProfile.create(validatedData.data);
+            const successObj = successResponse('Company Profile Created', companyProfile)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -28,11 +33,16 @@ exports.getCompanyProfileById = async (req, res) => {
 exports.updateCompanyProfile = async (req, res) => {
     try {
         const validatedData = schemaValidator(companyProfileSchema, req.body);
-        const companyProfile = await CompanyProfile.findByIdAndUpdate(req.params.id, validatedData, { new: true });
-        if (!companyProfile) {
-            return res.status(404).json({ message: 'Company profile not found' });
+        if (validatedData.success) {
+            const companyProfile = await CompanyProfile.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            if (!companyProfile) {
+                return res.status(404).json({ message: 'Company profile not found' });
+            }
+            const successObj = successResponse('Company profile updated', companyProfile)
+            res.status(successObj.status).send(successObj);
+        } else {
+            res.status(401).json({ message: validation.errors });
         }
-        res.json(companyProfile);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
