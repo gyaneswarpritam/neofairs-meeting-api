@@ -24,7 +24,8 @@ exports.getProductById = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: 'Product entry not found' });
         }
-        res.json(product);
+        const successObj = successResponse('Product List', product)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

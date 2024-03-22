@@ -36,7 +36,8 @@ exports.getLiveById = async (req, res) => {
         if (!live) {
             return res.status(404).json({ message: 'Live entry not found' });
         }
-        res.json(live);
+        const successObj = successResponse('Live List', live)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

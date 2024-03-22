@@ -24,7 +24,8 @@ exports.getMediaById = async (req, res) => {
         if (!media) {
             return res.status(404).json({ message: 'Media entry not found' });
         }
-        res.json(media);
+        const successObj = successResponse('Media List', media)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

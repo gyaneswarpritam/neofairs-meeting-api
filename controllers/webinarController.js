@@ -24,7 +24,8 @@ exports.getAllWebinar = async (req, res) => {
         if (!webinar) {
             return res.status(404).json({ message: 'Webinar not found' });
         }
-        res.json(webinar);
+        const successObj = successResponse('Webinar List', webinar)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

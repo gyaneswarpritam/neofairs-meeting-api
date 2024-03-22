@@ -24,7 +24,8 @@ exports.getGalleryById = async (req, res) => {
         if (!gallery) {
             return res.status(404).json({ message: 'Gallery entry not found' });
         }
-        res.json(gallery);
+        const successObj = successResponse('Gallery List', gallery)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -24,7 +24,8 @@ exports.getAllBrochure = async (req, res) => {
         if (!brochure) {
             return res.status(404).json({ message: 'Brochure not found' });
         }
-        res.json(brochure);
+        const successObj = successResponse('Brochure List', brochure)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

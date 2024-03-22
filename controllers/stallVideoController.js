@@ -24,7 +24,8 @@ exports.getStallVideoById = async (req, res) => {
         if (!stallVideo) {
             return res.status(404).json({ message: 'Stall video entry not found' });
         }
-        res.json(stallVideo);
+        const successObj = successResponse('Stall Video List', stallVideo)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

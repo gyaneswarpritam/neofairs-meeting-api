@@ -1,5 +1,6 @@
 // controllers/activityController.js
 const Activity = require('../models/Activity');
+const { successResponse } = require('../utils/sendResponse');
 const activitySchema = require('../validators/activityValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
@@ -24,7 +25,8 @@ exports.getAllActivities = async (req, res) => {
         if (!activity) {
             return res.status(404).json({ message: 'Activity not found' });
         }
-        res.json(activity);
+        const successObj = successResponse('Activity List', activity)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -24,7 +24,8 @@ exports.getAllDirectory = async (req, res) => {
         if (!directory) {
             return res.status(404).json({ message: 'Directory not found' });
         }
-        res.json(directory);
+        const successObj = successResponse('Directory List', directory)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

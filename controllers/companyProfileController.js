@@ -24,7 +24,8 @@ exports.getCompanyProfileById = async (req, res) => {
         if (!companyProfile) {
             return res.status(404).json({ message: 'Company profile not found' });
         }
-        res.json(companyProfile);
+        const successObj = successResponse('CompanyProfile List', companyProfile)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

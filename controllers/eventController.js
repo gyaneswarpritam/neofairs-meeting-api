@@ -24,7 +24,8 @@ exports.getAllEvent = async (req, res) => {
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
-        res.json(event);
+        const successObj = successResponse('Event List', event)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

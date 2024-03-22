@@ -24,7 +24,8 @@ exports.getAllFaq = async (req, res) => {
         if (!faq) {
             return res.status(404).json({ message: 'Faq not found' });
         }
-        res.json(faq);
+        const successObj = successResponse('Faq List', faq)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

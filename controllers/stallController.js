@@ -24,7 +24,8 @@ exports.getStallById = async (req, res) => {
         if (!stall) {
             return res.status(404).json({ message: 'Stall entry not found' });
         }
-        res.json(stall);
+        const successObj = successResponse('Stall List', stall)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

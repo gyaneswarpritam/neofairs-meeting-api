@@ -24,7 +24,8 @@ exports.getAllVisual = async (req, res) => {
         if (!visual) {
             return res.status(404).json({ message: 'Visual not found' });
         }
-        res.json(visual);
+        const successObj = successResponse('Visual List', visual)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
