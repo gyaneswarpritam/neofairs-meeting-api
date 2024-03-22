@@ -134,7 +134,6 @@ exports.fetchAllVisitor = async (req, res) => {
             totalPages: parseInt(Math.ceil(totalrecords / resultsPerPage)),
         };
         res.status(resp.status).send(resp);
-        // console.log(req.query, '****************88')
         // const allVisitors = await Visitor.find();
         // res.json({ data: allVisitors });
     } catch (error) {
@@ -194,7 +193,6 @@ exports.fetchAllExhibitor = async (req, res) => {
 };
 
 exports.approveVisitor = async (req, res) => {
-    console.log(req.params, '$$$$$$$$$$$$!!!!!!!')
     const { visitorId } = req.params;
     try {
         // Check if the request body contains a password

@@ -6,7 +6,6 @@ const schemaValidator = require('../validators/schemaValidator');
 exports.createActivity = async (req, res) => {
     try {
         const validatedData = schemaValidator(activitySchema, req.body);
-        console.log(validatedData, '@@@@@@@@@@@')
         if (validatedData.success) {
             const activity = await Activity.create(validatedData.data);
             res.status(201).json(activity);
