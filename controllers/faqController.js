@@ -13,6 +13,18 @@ exports.createFaq = async (req, res) => {
     }
 };
 
+exports.getAllFaq = async (req, res) => {
+    try {
+        const faq = await Faq.find({});
+        if (!faq) {
+            return res.status(404).json({ message: 'Faq not found' });
+        }
+        res.json(faq);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getFaqById = async (req, res) => {
     try {
         const faq = await Faq.findById(req.params.id);

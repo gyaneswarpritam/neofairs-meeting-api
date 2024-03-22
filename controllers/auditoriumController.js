@@ -13,6 +13,18 @@ exports.createAuditorium = async (req, res) => {
     }
 };
 
+exports.getAllAuditorium = async (req, res) => {
+    try {
+        const auditorium = await Auditorium.find({});
+        if (!auditorium) {
+            return res.status(404).json({ message: 'Auditorium not found' });
+        }
+        res.json(auditorium);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getAuditoriumById = async (req, res) => {
     try {
         const auditorium = await Auditorium.findById(req.params.id);

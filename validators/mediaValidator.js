@@ -5,8 +5,6 @@ const mediaSchema = z.object({
     title: z.string().min(1, { message: 'Title is required.' }),
     media: z.string().min(1, { message: 'Media is required.' }),
     description: z.string().min(1, { message: 'Description is required.' }),
-    active: z.string().default(true),
-    deleted: z.string().default(false),
 });
 
 module.exports = mediaSchema;

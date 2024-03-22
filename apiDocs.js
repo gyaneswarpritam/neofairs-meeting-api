@@ -441,205 +441,11 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-/**
- * @swagger
- * components:
- *   schemas:
- *     Auditorium:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *           description: The unique identifier of the auditorium.
- *         url:
- *           type: string
- *           description: The URL of the auditorium.
- *         active:
- *           type: string
- *           description: Indicates whether the auditorium is active.
- *         deleted:
- *           type: string
- *           description: Indicates whether the auditorium is deleted.
- *       required:
- *         - url
- *     AuditoriumValidation:
- *       type: object
- *       properties:
- *         url:
- *           type: string
- *           description: URL is required.
- *           minLength: 1
- *           example: "http://example.com"
- */
-
-/**
- * @swagger
- * /api/auditorium:
- *   post:
- *     summary: Create a new auditorium
- *     tags:
- *       - Auditorium
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/AuditoriumValidation'
- *     responses:
- *       '201':
- *         description: Auditorium created successfully
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *
- *   get:
- *     summary: Get all auditoriums
- *     tags:
- *       - Auditorium
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Auditorium'
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *
- * /api/auditorium/{id}:
- *   get:
- *     summary: Get an auditorium by ID
- *     tags:
- *       - Auditorium
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Auditorium'
- *       '404':
- *         description: Auditorium not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *
- *   put:
- *     summary: Update an auditorium by ID
- *     tags:
- *       - Auditorium
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/AuditoriumValidation'
- *     responses:
- *       '200':
- *         description: Auditorium updated successfully
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       '404':
- *         description: Auditorium not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *
- *   delete:
- *     summary: Delete an auditorium by ID
- *     tags:
- *       - Auditorium
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       '200':
- *         description: Auditorium deleted successfully
- *       '404':
- *         description: Auditorium not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
-
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     ErrorResponse:
- *       type: object
- *       properties:
- *         message:
- *           type: string
- *           description: A brief description of the error.
- *       example:
- *         message: Internal server error
  *     Activity:
  *       type: object
  *       properties:
@@ -670,13 +476,14 @@
  *         - startTime
  *         - endTime
  */
+
 /**
  * @swagger
- * /api/activity:
+ * /api/admin/activity:
  *   post:
  *     summary: Create a new activity
  *     tags:
- *       - Activity
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -686,18 +493,8 @@
  *           schema:
  *             $ref: '#/components/schemas/Activity'
  *     responses:
- *       '201':
+ *       '200':
  *         description: Activity created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Activity'
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       '500':
  *         description: Internal server error
  *         content:
@@ -708,18 +505,12 @@
  *   get:
  *     summary: Get all activities
  *     tags:
- *       - Activity
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Activity'
+ *         description: Successful response
  *       '500':
  *         description: Internal server error
  *         content:
@@ -727,26 +518,23 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *
- * /api/activity/{id}:
+ * /api/admin/activity/{id}:
  *   get:
  *     summary: Get an activity by ID
  *     tags:
- *       - Activity
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the activity to retrieve
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Activity'
+ *         description: Successful response
  *       '404':
  *         description: Activity not found
  *         content:
@@ -763,15 +551,16 @@
  *   put:
  *     summary: Update an activity by ID
  *     tags:
- *       - Activity
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the activity to update
  *     requestBody:
  *       required: true
  *       content:
@@ -781,12 +570,6 @@
  *     responses:
  *       '200':
  *         description: Activity updated successfully
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       '404':
  *         description: Activity not found
  *         content:
@@ -803,15 +586,16 @@
  *   delete:
  *     summary: Delete an activity by ID
  *     tags:
- *       - Activity
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the activity to delete
  *     responses:
  *       '200':
  *         description: Activity deleted successfully
@@ -828,50 +612,43 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-
 /**
  * @swagger
  * components:
  *   schemas:
- *     ErrorResponse:
- *       type: object
- *       properties:
- *         message:
- *           type: string
- *           description: A brief description of the error.
- *       example:
- *         message: Internal server error
- *     Briefcase:
+ *     Auditorium:
  *       type: object
  *       properties:
  *         _id:
  *           type: string
- *           description: The unique identifier of the briefcase.
- *         product:
+ *           description: The unique identifier of the auditorium.
+ *         url:
  *           type: string
- *           description: The ID of the product associated with the briefcase.
- *         exhibitor:
+ *           description: The URL of the auditorium.
+ *         active:
  *           type: string
- *           description: The ID of the exhibitor associated with the briefcase.
- *         visitor:
+ *           description: Indicates whether the auditorium is active.
+ *         deleted:
  *           type: string
- *           description: The ID of the visitor associated with the briefcase.
- *         catalog:
- *           type: boolean
- *           description: Indicates whether the briefcase contains a catalog.
+ *           description: Indicates whether the auditorium is deleted.
  *       required:
- *         - product
- *         - exhibitor
- *         - visitor
+ *         - url
+ *     AuditoriumValidation:
+ *       type: object
+ *       properties:
+ *         url:
+ *           type: string
+ *           description: URL is required.
+ *           minLength: 1
+ *           example: "http://example.com"
  */
-
 /**
  * @swagger
- * /api/briefcase:
+ * /api/admin/auditorium:
  *   post:
- *     summary: Create a new briefcase
+ *     summary: Create a new auditorium
  *     tags:
- *       - Briefcase
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -879,20 +656,10 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Briefcase'
+ *             $ref: '#/components/schemas/Auditorium'
  *     responses:
- *       '201':
- *         description: Briefcase created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Briefcase'
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *       '200':
+ *         description: Auditorium created successfully
  *       '500':
  *         description: Internal server error
  *         content:
@@ -901,20 +668,14 @@
  *               $ref: '#/components/schemas/ErrorResponse'
  *
  *   get:
- *     summary: Get all briefcases
+ *     summary: Get all auditoriums
  *     tags:
- *       - Briefcase
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Briefcase'
+ *         description: Successful response
  *       '500':
  *         description: Internal server error
  *         content:
@@ -922,28 +683,25 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *
- * /api/briefcase/{id}:
+ * /api/admin/auditorium/{id}:
  *   get:
- *     summary: Get a briefcase by ID
+ *     summary: Get an auditorium by ID
  *     tags:
- *       - Briefcase
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the auditorium to retrieve
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Briefcase'
+ *         description: Successful response
  *       '404':
- *         description: Briefcase not found
+ *         description: Auditorium not found
  *         content:
  *           application/json:
  *             schema:
@@ -956,34 +714,29 @@
  *               $ref: '#/components/schemas/ErrorResponse'
  *
  *   put:
- *     summary: Update a briefcase by ID
+ *     summary: Update an auditorium by ID
  *     tags:
- *       - Briefcase
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the auditorium to update
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Briefcase'
+ *             $ref: '#/components/schemas/Auditorium'
  *     responses:
  *       '200':
- *         description: Briefcase updated successfully
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Auditorium updated successfully
  *       '404':
- *         description: Briefcase not found
+ *         description: Auditorium not found
  *         content:
  *           application/json:
  *             schema:
@@ -996,22 +749,23 @@
  *               $ref: '#/components/schemas/ErrorResponse'
  *
  *   delete:
- *     summary: Delete a briefcase by ID
+ *     summary: Delete an auditorium by ID
  *     tags:
- *       - Briefcase
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the auditorium to delete
  *     responses:
  *       '200':
- *         description: Briefcase deleted successfully
+ *         description: Auditorium deleted successfully
  *       '404':
- *         description: Briefcase not found
+ *         description: Auditorium not found
  *         content:
  *           application/json:
  *             schema:
@@ -1028,14 +782,6 @@
  * @swagger
  * components:
  *   schemas:
- *     ErrorResponse:
- *       type: object
- *       properties:
- *         message:
- *           type: string
- *           description: A brief description of the error.
- *       example:
- *         message: Internal server error
  *     Brochure:
  *       type: object
  *       properties:
@@ -1047,7 +793,7 @@
  *           description: The title of the brochure.
  *         media:
  *           type: string
- *           description: The media type of the brochure.
+ *           description: The media type of the brochure (e.g., image, video).
  *         url:
  *           type: string
  *           description: The URL of the brochure.
@@ -1065,11 +811,11 @@
 
 /**
  * @swagger
- * /api/brochure:
+ * /api/admin/brochure:
  *   post:
  *     summary: Create a new brochure
  *     tags:
- *       - Brochure
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -1079,24 +825,8 @@
  *           schema:
  *             $ref: '#/components/schemas/Brochure'
  *     responses:
- *       '201':
+ *       '200':
  *         description: Brochure created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Brochure'
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       '401':
- *         description: Unauthorized - Missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       '500':
  *         description: Internal server error
  *         content:
@@ -1107,24 +837,12 @@
  *   get:
  *     summary: Get all brochures
  *     tags:
- *       - Brochure
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Brochure'
- *       '401':
- *         description: Unauthorized - Missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Successful response
  *       '500':
  *         description: Internal server error
  *         content:
@@ -1132,32 +850,23 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *
- * /api/brochure/{id}:
+ * /api/admin/brochure/{id}:
  *   get:
  *     summary: Get a brochure by ID
  *     tags:
- *       - Brochure
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the brochure to retrieve
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Brochure'
- *       '401':
- *         description: Unauthorized - Missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Successful response
  *       '404':
  *         description: Brochure not found
  *         content:
@@ -1174,15 +883,16 @@
  *   put:
  *     summary: Update a brochure by ID
  *     tags:
- *       - Brochure
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the brochure to update
  *     requestBody:
  *       required: true
  *       content:
@@ -1192,18 +902,6 @@
  *     responses:
  *       '200':
  *         description: Brochure updated successfully
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       '401':
- *         description: Unauthorized - Missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       '404':
  *         description: Brochure not found
  *         content:
@@ -1220,24 +918,19 @@
  *   delete:
  *     summary: Delete a brochure by ID
  *     tags:
- *       - Brochure
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
+ *         description: ID of the brochure to delete
  *     responses:
  *       '200':
  *         description: Brochure deleted successfully
- *       '401':
- *         description: Unauthorized - Missing or invalid token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  *       '404':
  *         description: Brochure not found
  *         content:
@@ -1254,11 +947,42 @@
 
 /**
  * @swagger
- * /api/companyProfile:
+ * components:
+ *   schemas:
+ *     Directory:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the directory.
+ *         title:
+ *           type: string
+ *           description: The title of the directory.
+ *         media:
+ *           type: string
+ *           description: The media type of the directory (e.g., image, video).
+ *         description:
+ *           type: string
+ *           description: The description of the directory.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the directory is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the directory is deleted.
+ *       required:
+ *         - title
+ *         - media
+ *         - description
+ */
+
+/**
+ * @swagger
+ * /api/admin/directory:
  *   post:
- *     summary: Create a new company profile
+ *     summary: Create a new directory entry
  *     tags:
- *       - CompanyProfile
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -1266,20 +990,10 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CompanyProfile'
+ *             $ref: '#/components/schemas/Directory'
  *     responses:
- *       '201':
- *         description: Company profile created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/CompanyProfile'
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *       '200':
+ *         description: Directory entry created successfully
  *       '500':
  *         description: Internal server error
  *         content:
@@ -1288,20 +1002,14 @@
  *               $ref: '#/components/schemas/ErrorResponse'
  *
  *   get:
- *     summary: Get all company profiles
+ *     summary: Get all directory entries
  *     tags:
- *       - CompanyProfile
+ *       - Admin
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/CompanyProfile'
+ *         description: Successful response
  *       '500':
  *         description: Internal server error
  *         content:
@@ -1309,28 +1017,25 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *
- * /api/companyProfile/{id}:
+ * /api/admin/directory/{id}:
  *   get:
- *     summary: Get a company profile by ID
+ *     summary: Get a directory entry by ID
  *     tags:
- *       - CompanyProfile
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *     security:
- *       - bearerAuth: []
+ *         required: true
+ *         description: ID of the directory entry to retrieve
  *     responses:
  *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/CompanyProfile'
+ *         description: Successful response
  *       '404':
- *         description: Company profile not found
+ *         description: Directory entry not found
  *         content:
  *           application/json:
  *             schema:
@@ -1343,34 +1048,29 @@
  *               $ref: '#/components/schemas/ErrorResponse'
  *
  *   put:
- *     summary: Update a company profile by ID
+ *     summary: Update a directory entry by ID
  *     tags:
- *       - CompanyProfile
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *     security:
- *       - bearerAuth: []
+ *         required: true
+ *         description: ID of the directory entry to update
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CompanyProfile'
+ *             $ref: '#/components/schemas/Directory'
  *     responses:
  *       '200':
- *         description: Company profile updated successfully
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Directory entry updated successfully
  *       '404':
- *         description: Company profile not found
+ *         description: Directory entry not found
  *         content:
  *           application/json:
  *             schema:
@@ -1383,22 +1083,23 @@
  *               $ref: '#/components/schemas/ErrorResponse'
  *
  *   delete:
- *     summary: Delete a company profile by ID
+ *     summary: Delete a directory entry by ID
  *     tags:
- *       - CompanyProfile
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *     security:
- *       - bearerAuth: []
+ *         required: true
+ *         description: ID of the directory entry to delete
  *     responses:
  *       '200':
- *         description: Company profile deleted successfully
+ *         description: Directory entry deleted successfully
  *       '404':
- *         description: Company profile not found
+ *         description: Directory entry not found
  *         content:
  *           application/json:
  *             schema:
@@ -1411,3 +1112,1008 @@
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Event:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the event.
+ *         name:
+ *           type: string
+ *           description: The name of the event.
+ *         status:
+ *           type: string
+ *           description: The status of the event.
+ *         startDateTime:
+ *           type: string
+ *           format: date-time
+ *           description: The start date and time of the event.
+ *         endDateTime:
+ *           type: string
+ *           format: date-time
+ *           description: The end date and time of the event.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the event is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the event is deleted.
+ *       required:
+ *         - name
+ *         - status
+ *         - startDateTime
+ *         - endDateTime
+ */
+
+/**
+ * @swagger
+ * /api/admin/event:
+ *   post:
+ *     summary: Create a new event
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Event'
+ *     responses:
+ *       '200':
+ *         description: Event created successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   get:
+ *     summary: Get all events
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ * /api/admin/event/{id}:
+ *   get:
+ *     summary: Get an event by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the event to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Event not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   put:
+ *     summary: Update an event by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the event to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Event'
+ *     responses:
+ *       '200':
+ *         description: Event updated successfully
+ *       '404':
+ *         description: Event not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   delete:
+ *     summary: Delete an event by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the event to delete
+ *     responses:
+ *       '200':
+ *         description: Event deleted successfully
+ *       '404':
+ *         description: Event not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Faq:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the FAQ.
+ *         title:
+ *           type: string
+ *           description: The title of the FAQ.
+ *         description:
+ *           type: string
+ *           description: The description of the FAQ.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the FAQ is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the FAQ is deleted.
+ *       required:
+ *         - title
+ *         - description
+ */
+
+/**
+ * @swagger
+ * /api/admin/faq:
+ *   post:
+ *     summary: Create a new FAQ
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FAQ'
+ *     responses:
+ *       '200':
+ *         description: FAQ created successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   get:
+ *     summary: Get all FAQs
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ * /api/admin/faq/{id}:
+ *   get:
+ *     summary: Get a FAQ by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the FAQ to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: FAQ not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   put:
+ *     summary: Update a FAQ by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the FAQ to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FAQ'
+ *     responses:
+ *       '200':
+ *         description: FAQ updated successfully
+ *       '404':
+ *         description: FAQ not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   delete:
+ *     summary: Delete a FAQ by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the FAQ to delete
+ *     responses:
+ *       '200':
+ *         description: FAQ deleted successfully
+ *       '404':
+ *         description: FAQ not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Hall:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the hall.
+ *         name:
+ *           type: string
+ *           description: The name of the hall.
+ *         description:
+ *           type: string
+ *           description: The description of the hall.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the hall is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the hall is deleted.
+ *       required:
+ *         - name
+ */
+
+/**
+ * @swagger
+ * /api/admin/hall:
+ *   post:
+ *     summary: Create a new hall
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Hall'
+ *     responses:
+ *       '200':
+ *         description: Hall created successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   get:
+ *     summary: Get all halls
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ * /api/admin/hall/{id}:
+ *   get:
+ *     summary: Get a hall by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the hall to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Hall not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   put:
+ *     summary: Update a hall by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the hall to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Hall'
+ *     responses:
+ *       '200':
+ *         description: Hall updated successfully
+ *       '404':
+ *         description: Hall not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   delete:
+ *     summary: Delete a hall by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the hall to delete
+ *     responses:
+ *       '200':
+ *         description: Hall deleted successfully
+ *       '404':
+ *         description: Hall not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Live:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the live event.
+ *         title:
+ *           type: string
+ *           description: The title of the live event.
+ *         description:
+ *           type: string
+ *           description: The description of the live event.
+ *         url:
+ *           type: string
+ *           description: The URL of the live event.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the live event is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the live event is deleted.
+ *       required:
+ *         - title
+ *         - description
+ *         - url
+ */
+
+/**
+ * @swagger
+ * /api/admin/live:
+ *   post:
+ *     summary: Create a new live session
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Live'
+ *     responses:
+ *       '200':
+ *         description: Live session created successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   get:
+ *     summary: Get all live sessions
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ * /api/admin/live/{id}:
+ *   get:
+ *     summary: Get a live session by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the live session to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Live session not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   put:
+ *     summary: Update a live session by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the live session to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Live'
+ *     responses:
+ *       '200':
+ *         description: Live session updated successfully
+ *       '404':
+ *         description: Live session not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   delete:
+ *     summary: Delete a live session by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the live session to delete
+ *     responses:
+ *       '200':
+ *         description: Live session deleted successfully
+ *       '404':
+ *         description: Live session not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Visual:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the visual content.
+ *         title:
+ *           type: string
+ *           description: The title of the visual content.
+ *         description:
+ *           type: string
+ *           description: The description of the visual content.
+ *         type:
+ *           type: string
+ *           enum: [pdf, video]
+ *           description: The type of the visual content (pdf or video).
+ *         media:
+ *           type: string
+ *           description: The media type of the visual content.
+ *         url:
+ *           type: string
+ *           description: The URL of the visual content.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the visual content is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the visual content is deleted.
+ *       required:
+ *         - title
+ *         - description
+ *         - type
+ */
+
+/**
+ * @swagger
+ * /api/admin/visual:
+ *   post:
+ *     summary: Create a new visual
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Visual'
+ *     responses:
+ *       '200':
+ *         description: Visual created successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   get:
+ *     summary: Get all visuals
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ * /api/admin/visual/{id}:
+ *   get:
+ *     summary: Get a visual by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the visual to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Visual not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   put:
+ *     summary: Update a visual by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the visual to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Visual'
+ *     responses:
+ *       '200':
+ *         description: Visual updated successfully
+ *       '404':
+ *         description: Visual not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   delete:
+ *     summary: Delete a visual by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the visual to delete
+ *     responses:
+ *       '200':
+ *         description: Visual deleted successfully
+ *       '404':
+ *         description: Visual not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Webinar:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the webinar.
+ *         title:
+ *           type: string
+ *           description: The title of the webinar.
+ *         description:
+ *           type: string
+ *           description: The description of the webinar.
+ *         url:
+ *           type: string
+ *           description: The URL of the webinar.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the webinar is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the webinar is deleted.
+ *       required:
+ *         - title
+ *         - description
+ *         - url
+ */
+
+/**
+ * @swagger
+ * /api/admin/webinar:
+ *   post:
+ *     summary: Create a new webinar
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Webinar'
+ *     responses:
+ *       '200':
+ *         description: Webinar created successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   get:
+ *     summary: Get all webinars
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ * /api/admin/webinar/{id}:
+ *   get:
+ *     summary: Get a webinar by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the webinar to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Webinar not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   put:
+ *     summary: Update a webinar by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the webinar to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Webinar'
+ *     responses:
+ *       '200':
+ *         description: Webinar updated successfully
+ *       '404':
+ *         description: Webinar not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   delete:
+ *     summary: Delete a webinar by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the webinar to delete
+ *     responses:
+ *       '200':
+ *         description: Webinar deleted successfully
+ *       '404':
+ *         description: Webinar not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */

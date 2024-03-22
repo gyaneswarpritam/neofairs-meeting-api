@@ -7,8 +7,6 @@ const productSchema = z.object({
     fileType: z.enum(['secured', 'downloadable']).optional(),
     file: z.string().optional(),
     exhibitor: z.string().nonempty({ message: 'Exhibitor ID is required.' }),
-    active: z.string().default(true),
-    deleted: z.string().default(false),
 });
 
 module.exports = productSchema;

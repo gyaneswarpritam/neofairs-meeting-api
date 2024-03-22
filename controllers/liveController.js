@@ -13,6 +13,18 @@ exports.createLive = async (req, res) => {
     }
 };
 
+exports.getAllLive = async (req, res) => {
+    try {
+        const live = await Live.find({});
+        if (!live) {
+            return res.status(404).json({ message: 'Live not found' });
+        }
+        res.json(live);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getLiveById = async (req, res) => {
     try {
         const live = await Live.findById(req.params.id);

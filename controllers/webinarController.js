@@ -13,6 +13,18 @@ exports.createWebinar = async (req, res) => {
     }
 };
 
+exports.getAllWebinar = async (req, res) => {
+    try {
+        const webinar = await Webinar.find({});
+        if (!webinar) {
+            return res.status(404).json({ message: 'Webinar not found' });
+        }
+        res.json(webinar);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getWebinarById = async (req, res) => {
     try {
         const webinar = await Webinar.findById(req.params.id);

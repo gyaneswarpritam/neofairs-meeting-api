@@ -13,6 +13,18 @@ exports.createVisual = async (req, res) => {
     }
 };
 
+exports.getAllVisual = async (req, res) => {
+    try {
+        const visual = await Visual.find({});
+        if (!visual) {
+            return res.status(404).json({ message: 'Visual not found' });
+        }
+        res.json(visual);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getVisualById = async (req, res) => {
     try {
         const visual = await Visual.findById(req.params.id);

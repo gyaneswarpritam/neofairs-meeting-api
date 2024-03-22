@@ -13,6 +13,18 @@ exports.createDirectory = async (req, res) => {
     }
 };
 
+exports.getAllDirectory = async (req, res) => {
+    try {
+        const directory = await Directory.find({});
+        if (!directory) {
+            return res.status(404).json({ message: 'Directory not found' });
+        }
+        res.json(directory);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getDirectoryById = async (req, res) => {
     try {
         const directory = await Directory.findById(req.params.id);

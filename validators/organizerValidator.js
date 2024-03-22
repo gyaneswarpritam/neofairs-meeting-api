@@ -9,8 +9,6 @@ const organizerSchema = z.object({
     budget: z.string().min(1, { message: 'Budget is required.' }),
     interest: z.string().min(1, { message: 'Interest is required.' }),
     eventType: z.string().min(1, { message: 'Event type is required.' }),
-    deleted: z.boolean().default(false),
-    active: z.string().default(true),
 });
 
 module.exports = organizerSchema;

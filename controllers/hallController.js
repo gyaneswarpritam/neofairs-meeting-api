@@ -13,6 +13,18 @@ exports.createHall = async (req, res) => {
     }
 };
 
+exports.getAllHall = async (req, res) => {
+    try {
+        const hall = await Hall.find({});
+        if (!hall) {
+            return res.status(404).json({ message: 'Hall not found' });
+        }
+        res.json(hall);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getHallById = async (req, res) => {
     try {
         const hall = await Hall.findById(req.params.id);

@@ -8,7 +8,6 @@ const gallerySchema = z.object({
     exhibitor: z.string().nonempty({ message: 'Exhibitor ID is required.' }),
     active: z.string().default(true),
     type: z.enum(['video', 'image']).default('video'),
-    deleted: z.string().default(false),
 });
 
 module.exports = gallerySchema;

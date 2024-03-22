@@ -13,6 +13,18 @@ exports.createBrochure = async (req, res) => {
     }
 };
 
+exports.getAllBrochure = async (req, res) => {
+    try {
+        const brochure = await Brochure.find({});
+        if (!brochure) {
+            return res.status(404).json({ message: 'Brochure not found' });
+        }
+        res.json(brochure);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getBrochureById = async (req, res) => {
     try {
         const brochure = await Brochure.findById(req.params.id);
