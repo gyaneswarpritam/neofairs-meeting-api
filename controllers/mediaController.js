@@ -19,6 +19,19 @@ exports.createMedia = async (req, res) => {
     }
 };
 
+exports.getAllMedia = async (req, res) => {
+    try {
+        const media = await Media.find({});
+        if (!media) {
+            return res.status(404).json({ message: 'Media not found' });
+        }
+        const successObj = successResponse('Media List', media)
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.getMediaById = async (req, res) => {
     try {
         const media = await Media.findById(req.params.id);

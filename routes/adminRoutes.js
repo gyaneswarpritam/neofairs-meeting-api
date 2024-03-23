@@ -13,6 +13,7 @@ const hallController = require('../controllers/hallController');
 const liveController = require('../controllers/liveController');
 const visualController = require('../controllers/visualController');
 const webinarController = require('../controllers/webinarController');
+const mediaController = require('../controllers/mediaController');
 
 const { jwtSecret } = require('../config/config');
 
@@ -105,13 +106,20 @@ router.put('/live/:id', passport.authenticate('jwt-admin', { session: false }), 
 router.delete('/live/:id', passport.authenticate('jwt-admin', { session: false }), liveController.deleteLive);
 
 /*Live Route*/
+router.post('/media', passport.authenticate('jwt-admin', { session: false }), mediaController.createMedia);
+router.get('/media', passport.authenticate('jwt-admin', { session: false }), mediaController.getAllMedia);
+router.get('/media/:id', passport.authenticate('jwt-admin', { session: false }), mediaController.getMediaById);
+router.put('/media/:id', passport.authenticate('jwt-admin', { session: false }), mediaController.updateMedia);
+router.delete('/media/:id', passport.authenticate('jwt-admin', { session: false }), mediaController.deleteMedia);
+
+/*Media Route*/
 router.post('/visual', passport.authenticate('jwt-admin', { session: false }), visualController.createVisual);
 router.get('/visual', passport.authenticate('jwt-admin', { session: false }), visualController.getAllVisual);
 router.get('/visual/:id', passport.authenticate('jwt-admin', { session: false }), visualController.getVisualById);
 router.put('/visual/:id', passport.authenticate('jwt-admin', { session: false }), visualController.updateVisual);
 router.delete('/visual/:id', passport.authenticate('jwt-admin', { session: false }), visualController.deleteVisual);
 
-/*Live Route*/
+/*Webinar Route*/
 router.post('/webinar', passport.authenticate('jwt-admin', { session: false }), webinarController.createWebinar);
 router.get('/webinar', passport.authenticate('jwt-admin', { session: false }), webinarController.getAllWebinar);
 router.get('/webinar/:id', passport.authenticate('jwt-admin', { session: false }), webinarController.getWebinarById);

@@ -1,5 +1,6 @@
 // controllers/directoryController.js
 const Directory = require('../models/Directory');
+const { successResponse } = require('../utils/sendResponse');
 const directorySchema = require('../validators/directoryValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
