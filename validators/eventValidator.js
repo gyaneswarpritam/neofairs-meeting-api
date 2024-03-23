@@ -4,12 +4,8 @@ const { z } = require('zod');
 const eventSchema = z.object({
     name: z.string().min(1, { message: 'Name is required.' }),
     status: z.string().min(1, { message: 'Status is required.' }),
-    startDateTime: z.date().min(new Date(), { message: 'Start date should be in the future.' }),
-    endDateTime: z.date().refine((value, context) => {
-        // Access the startDateTime from the parent object
-        const startDateTime = context?.parent?.startDateTime;
-        return value > startDateTime;
-    }, { message: 'End date should be after start date.' }),
+    startDateTime: z.string().min(1, { message: 'Start Date Time is required.' }),
+    endDateTime: z.string().min(1, { message: 'End Date Time is required.' }),
 });
 
 module.exports = eventSchema;

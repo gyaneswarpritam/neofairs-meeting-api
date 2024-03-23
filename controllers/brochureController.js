@@ -1,5 +1,6 @@
 // controllers/brochureController.js
 const Brochure = require('../models/Brochure');
+const { successResponse } = require('../utils/sendResponse');
 const brochureSchema = require('../validators/brochureValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
@@ -37,7 +38,8 @@ exports.getBrochureById = async (req, res) => {
         if (!brochure) {
             return res.status(404).json({ message: 'Brochure not found' });
         }
-        res.json(brochure);
+        const successObj = successResponse('Brochure Details', brochure)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

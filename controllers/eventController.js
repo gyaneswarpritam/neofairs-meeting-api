@@ -1,18 +1,24 @@
 // controllers/eventController.js
 const Event = require('../models/Event');
+const { convertToUTC } = require('../utils/dateService');
 const { successResponse } = require('../utils/sendResponse');
 const eventSchema = require('../validators/eventValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
 exports.createEvent = async (req, res) => {
     try {
-        const validatedData = schemaValidator(eventSchema, req.body);
+        const event = req.body;
+        event.startDateTime = convertToUTC(event.startDateTime);
+        event.endDateTime = convertToUTC(event.endDateTime);
+
+        const validatedData = schemaValidator(eventSchema, event);
         if (validatedData.success) {
             const event = await Event.create(validatedData.data);
             const successObj = successResponse('Event Created', event)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            console.log(validatedData, '^^^^^^^^^^^6')
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
