@@ -14,6 +14,7 @@ const cors = require('cors');
 const visitorRoutes = require('./routes/visitorRoutes');
 const exhibitorRoutes = require('./routes/exhibitorRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // Initialize Express app
 const app = express();
@@ -37,6 +38,7 @@ app.use(mongoLogger);
 app.use('/api/visitor', visitorRoutes);
 app.use('/api/exhibitor', exhibitorRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Setup Swagger
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

@@ -38,7 +38,8 @@ exports.getWebinarById = async (req, res) => {
         if (!webinar) {
             return res.status(404).json({ message: 'Webinar entry not found' });
         }
-        res.json(webinar);
+        const successObj = successResponse('Webinar Details', webinar)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

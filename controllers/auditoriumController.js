@@ -1,7 +1,7 @@
 // controllers/auditoriumController.js
 const Auditorium = require('../models/Auditorium');
 const { successResponse } = require('../utils/sendResponse');
-const activitySchema = require('../validators/auditoriumValidator');
+const auditoriumSchema = require('../validators/auditoriumValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
 exports.createAuditorium = async (req, res) => {
