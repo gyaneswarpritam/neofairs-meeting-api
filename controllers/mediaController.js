@@ -12,7 +12,7 @@ exports.createMedia = async (req, res) => {
             const successObj = successResponse('Media Created', media)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -56,7 +56,7 @@ exports.updateMedia = async (req, res) => {
             const successObj = successResponse('Media updated', media)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });

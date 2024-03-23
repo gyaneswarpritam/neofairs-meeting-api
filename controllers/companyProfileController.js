@@ -11,7 +11,7 @@ exports.createCompanyProfile = async (req, res) => {
             const successObj = successResponse('Company Profile Created', companyProfile)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -42,7 +42,7 @@ exports.updateCompanyProfile = async (req, res) => {
             const successObj = successResponse('Company profile updated', companyProfile)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });

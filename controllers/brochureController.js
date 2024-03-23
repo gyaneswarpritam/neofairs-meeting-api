@@ -12,7 +12,7 @@ exports.createBrochure = async (req, res) => {
             const successObj = successResponse('Brochure Created', brochure)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -56,7 +56,7 @@ exports.updateBrochure = async (req, res) => {
             const successObj = successResponse('Brochure updated', brochure)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });

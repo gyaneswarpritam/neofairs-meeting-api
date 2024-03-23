@@ -12,7 +12,7 @@ exports.createVisual = async (req, res) => {
             const successObj = successResponse('Visual Created', visual)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -55,7 +55,7 @@ exports.updateVisual = async (req, res) => {
             const successObj = successResponse('Visual updated', visual)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         };
     } catch (error) {
         res.status(400).json({ message: error.message });

@@ -12,7 +12,7 @@ exports.createStall = async (req, res) => {
             const successObj = successResponse('Stall Created', stall)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -43,7 +43,7 @@ exports.updateStall = async (req, res) => {
             const successObj = successResponse('Stall updated', stall)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });

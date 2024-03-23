@@ -12,7 +12,7 @@ exports.createFaq = async (req, res) => {
             const successObj = successResponse('Faq Created', faq)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -55,7 +55,7 @@ exports.updateFaq = async (req, res) => {
             const successObj = successResponse('Faq updated', faq)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });

@@ -2109,3 +2109,173 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     FlashMessage:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the flash message.
+ *         title:
+ *           type: string
+ *           description: The title of the flash message.
+ *         description:
+ *           type: string
+ *           description: The description of the flash message.
+ *         userType:
+ *           type: string
+ *           description: The type of user for whom the flash message is intended.
+ *         status:
+ *           type: string
+ *           description: The status of the flash message.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the flash message is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the flash message is deleted.
+ *       required:
+ *         - title
+ *         - description
+ *         - userType
+ *         - status
+ */
+/**
+ * @swagger
+ * /api/admin/flashmessage:
+ *   post:
+ *     summary: Create a new flash message
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FlashMessage'
+ *     responses:
+ *       '200':
+ *         description: Flash message created successfully
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   get:
+ *     summary: Get all flash messages
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ * /api/admin/flashmessage/{id}:
+ *   get:
+ *     summary: Get a flash message by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the flash message to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Flash message not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   put:
+ *     summary: Update a flash message by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the flash message to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FlashMessage'
+ *     responses:
+ *       '200':
+ *         description: Flash message updated successfully
+ *       '404':
+ *         description: Flash message not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *
+ *   delete:
+ *     summary: Delete a flash message by ID
+ *     tags:
+ *       - Admin
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the flash message to delete
+ *     responses:
+ *       '200':
+ *         description: Flash message deleted successfully
+ *       '404':
+ *         description: Flash message not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */

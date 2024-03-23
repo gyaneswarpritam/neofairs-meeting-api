@@ -12,7 +12,7 @@ exports.createHall = async (req, res) => {
             const successObj = successResponse('Hall Created', hall)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -56,7 +56,7 @@ exports.updateHall = async (req, res) => {
             const successObj = successResponse('Hall updated', hall)
             res.status(successObj.status).send(successObj);
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
