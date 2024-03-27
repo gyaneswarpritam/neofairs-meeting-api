@@ -15,6 +15,7 @@ const visualController = require('../controllers/visualController');
 const webinarController = require('../controllers/webinarController');
 const mediaController = require('../controllers/mediaController');
 const flashMessageController = require('../controllers/flashMessageController');
+const settingController = require('../controllers/settingController');
 
 const { jwtSecret } = require('../config/config');
 
@@ -133,5 +134,12 @@ router.get('/flashMessage', passport.authenticate('jwt-admin', { session: false 
 router.get('/flashMessage/:id', passport.authenticate('jwt-admin', { session: false }), flashMessageController.getFlashMessageById);
 router.put('/flashMessage/:id', passport.authenticate('jwt-admin', { session: false }), flashMessageController.updateFlashMessage);
 router.delete('/flashMessage/:id', passport.authenticate('jwt-admin', { session: false }), flashMessageController.deleteFlashMessage);
+
+/*Settings Route*/
+router.post('/settings', passport.authenticate('jwt-admin', { session: false }), settingController.createSetting);
+router.get('/settings', passport.authenticate('jwt-admin', { session: false }), settingController.getAllSettings);
+router.get('/settings/:id', passport.authenticate('jwt-admin', { session: false }), settingController.getSettingById);
+router.put('/settings/:id', passport.authenticate('jwt-admin', { session: false }), settingController.updateSetting);
+router.delete('/settings/:id', passport.authenticate('jwt-admin', { session: false }), settingController.deleteSetting);
 
 module.exports = router;

@@ -2279,3 +2279,142 @@
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Setting:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The unique identifier of the setting.
+ *         startDateTime:
+ *           type: string
+ *           description: The start date and time of the setting.
+ *         endDateTime:
+ *           type: string
+ *           description: The end date and time of the setting.
+ *         timezone:
+ *           type: string
+ *           description: The timezone of the setting.
+ *         duration:
+ *           type: string
+ *           description: The duration of the setting.
+ *         active:
+ *           type: string
+ *           description: Indicates whether the setting is active.
+ *         deleted:
+ *           type: string
+ *           description: Indicates whether the setting is deleted.
+ *       required:
+ *         - startDateTime
+ *         - endDateTime
+ *         - timezone
+ *         - duration
+ */
+
+/**
+ * @swagger
+ * /api/settings:
+ *   post:
+ *     summary: Create a new setting
+ *     tags:
+ *       - Settings
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Setting'
+ *     responses:
+ *       '200':
+ *         description: Setting created successfully
+ *       '401':
+ *         description: Invalid data provided
+ *       '400':
+ *         description: Bad request
+ *       '500':
+ *         description: Internal server error
+ *
+ *   get:
+ *     summary: Get all settings
+ *     tags:
+ *       - Settings
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Settings not found
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/settings/{id}:
+ *   get:
+ *     summary: Get a setting by ID
+ *     tags:
+ *       - Settings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the setting to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Setting not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   put:
+ *     summary: Update a setting by ID
+ *     tags:
+ *       - Settings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the setting to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Setting'
+ *     responses:
+ *       '200':
+ *         description: Setting updated successfully
+ *       '401':
+ *         description: Invalid data provided
+ *       '404':
+ *         description: Setting not found
+ *       '400':
+ *         description: Bad request
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a setting by ID
+ *     tags:
+ *       - Settings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the setting to delete
+ *     responses:
+ *       '200':
+ *         description: Setting deleted successfully
+ *       '404':
+ *         description: Setting not found
+ *       '500':
+ *         description: Internal server error
+ */

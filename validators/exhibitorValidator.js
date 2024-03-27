@@ -13,4 +13,9 @@ const exhibitorSchema = z.object({
     phoneNo: z.string().min(1, { message: 'Phone number is required.' }),
 });
 
-module.exports = exhibitorSchema;
+const exhibitorLoginSchema = z.object({
+    email: z.string().min(1, { message: 'email is required.' }).email('Invalid email address.'),
+    password: z.string().min(1, { message: 'Password is required.' })
+});
+
+module.exports = { exhibitorSchema, exhibitorLoginSchema };

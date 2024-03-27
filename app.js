@@ -10,18 +10,20 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerOptions = require('./swaggerOptions');
 const cors = require('cors');
+const socket = require("socket.io");
 
 const visitorRoutes = require('./routes/visitorRoutes');
 const exhibitorRoutes = require('./routes/exhibitorRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 // Initialize Express app
 const app = express();
 app.use(cors());
 // Connect to MongoDB
 mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB connected'))
+    .then(() => console.log('MongoDB connected', config.mongoURI))
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Middleware to parse request body
@@ -39,6 +41,7 @@ app.use('/api/visitor', visitorRoutes);
 app.use('/api/exhibitor', exhibitorRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Setup Swagger
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -48,4 +51,25 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(errorHandler);
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const io = socket(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        credentials: true,
+    },
+});
+
+global.onlineUsers = new Map();
+io.on("connection", (socket) => {
+    global.chatSocket = socket;
+    socket.on("add-user", (userId) => {
+        onlineUsers.set(userId, socket.id);
+    });
+
+    socket.on("send-msg", (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+        }
+    });
+});
