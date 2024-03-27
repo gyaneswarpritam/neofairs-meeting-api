@@ -23,7 +23,7 @@ const app = express();
 app.use(cors());
 // Connect to MongoDB
 mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB connected', config.mongoURI))
+    .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Middleware to parse request body
