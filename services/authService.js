@@ -71,7 +71,7 @@ passport.use('admin-login', new LocalStrategy({
 
 passport.use('jwt-visitor', new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: config.jwtSecret
+    secretOrKey: process.env.JWTSECRET
 }, async (payload, done) => {
     try {
         const visitor = await Visitor.findById(payload.sub);
@@ -93,7 +93,7 @@ exports.generateJWT = (user) => {
         email: user.email
         // Add more user info if needed
     };
-    return jwt.sign(payload, config.jwtSecret, { expiresIn: '1h' });
+    return jwt.sign(payload, process.env.JWTSECRET, { expiresIn: '1h' });
 };
 
 exports.authenticateVisitor = (req, res, next) => {
