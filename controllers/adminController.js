@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Admin = require('../models/Admin');
-const config = require('../config/config');
+const { jwtSecret } = require('../config/config');
 // controllers/adminController.js
 const Visitor = require('../models/Visitor');
 const Exhibitor = require('../models/Exhibitor');
@@ -71,7 +71,7 @@ exports.login = async (req, res) => {
                 // Sign token
                 jwt.sign(
                     payload,
-                    process.env.JWTSECRET,
+                    jwtSecret,
                     { expiresIn: '3650d' },
                     (err, token) => {
                         res.json({

@@ -4,7 +4,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const { jwtSecret } = require('../config/config');
 const Visitor = require('../models/Visitor');
 const Exhibitor = require('../models/Exhibitor');
 const Admin = require('../models/Admin');
@@ -71,7 +71,7 @@ passport.use('admin-login', new LocalStrategy({
 
 passport.use('jwt-visitor', new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWTSECRET
+    secretOrKey: jwtSecret
 }, async (payload, done) => {
     try {
         const visitor = await Visitor.findById(payload.sub);
@@ -93,7 +93,7 @@ exports.generateJWT = (user) => {
         email: user.email
         // Add more user info if needed
     };
-    return jwt.sign(payload, process.env.JWTSECRET, { expiresIn: '1h' });
+    return jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
 };
 
 exports.authenticateVisitor = (req, res, next) => {

@@ -4,7 +4,7 @@ const Exhibitor = require('../models/Exhibitor');
 const { exhibitorSchema, exhibitorLoginSchema } = require('../validators/exhibitorValidator');
 const schemaValidator = require('../validators/schemaValidator');
 const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const { jwtSecret } = require('../config/config');
 
 exports.register = async (req, res) => {
     try {
@@ -59,7 +59,7 @@ exports.login = async (req, res, next) => {
                 // Sign token
                 jwt.sign(
                     payload,
-                    process.env.JWTSECRET,
+                    jwtSecret,
                     { expiresIn: '3650d' },
                     (err, token) => {
                         res.json({

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Visitor = require('../models/Visitor');
 const authService = require('../services/authService');
-const config = require('../config/config');
+const { jwtSecret } = require('../config/config');
 const schemaValidator = require('../validators/schemaValidator');
 const { visitorSchema, visitorLoginSchema } = require('../validators/visitorValidator');
 const emailController = require("./emailController");
@@ -62,7 +62,7 @@ exports.login = async (req, res, next) => {
                 // Sign token
                 jwt.sign(
                     payload,
-                    process.env.JWTSECRET,
+                    jwtSecret,
                     { expiresIn: '3650d' },
                     (err, token) => {
                         res.json({
