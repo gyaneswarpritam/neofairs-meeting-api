@@ -11,6 +11,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerOptions = require('./swaggerOptions');
 const cors = require('cors');
 const socket = require("socket.io");
+const path = require("path");
 
 const visitorRoutes = require('./routes/visitorRoutes');
 const exhibitorRoutes = require('./routes/exhibitorRoutes');
@@ -25,6 +26,10 @@ app.use(cors());
 mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
+
+// view engine setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "hbs");
 
 // Middleware to parse request body
 app.use(bodyParser.json());

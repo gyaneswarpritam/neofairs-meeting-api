@@ -7,6 +7,7 @@ const authService = require('../services/authService');
 const config = require('../config/config');
 const schemaValidator = require('../validators/schemaValidator');
 const { visitorSchema, visitorLoginSchema } = require('../validators/visitorValidator');
+const emailController = require("./emailController");
 
 exports.register = async (req, res) => {
     try {
@@ -23,8 +24,9 @@ exports.register = async (req, res) => {
             const visitor = new Visitor(req.body);
 
             // Save the visitor to the database
-            await visitor.save();
-
+            const visitorData = await visitor.save();
+            const emailData = await emailController.sendRegisteredMail(visitorData);
+            console.log(emailData, '^^^^^^^^^^^^^6')
             // Respond with success message
             res.status(201).json({ message: 'Visitor registered successfully' });
         } else {
