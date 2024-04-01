@@ -12,7 +12,7 @@ const swaggerOptions = require('./swaggerOptions');
 const cors = require('cors');
 const socket = require("socket.io");
 const path = require("path");
-
+require("dotenv").config();
 const visitorRoutes = require('./routes/visitorRoutes');
 const exhibitorRoutes = require('./routes/exhibitorRoutes');
 const adminRoutes = require('./routes/adminRoutes');
