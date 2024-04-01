@@ -29,7 +29,7 @@ transporter.use("compile", hbs(handlebarOptions));
 const emailController = {};
 emailController.sendRegisteredMail = async function (data) {
     let info = await transporter.sendMail({
-        from: "info@cbptech.in",
+        from: "gyaneswar.pritam@gmail.com",
         to: data["email"],
         subject: "Registered Successfully",
         html: `<!DOCTYPE html>
