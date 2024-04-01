@@ -30,6 +30,7 @@ const emailController = {};
 emailController.sendRegisteredMail = async function (data) {
     let info = await transporter.sendMail({
         from: "enquiry@neofairs.com",
+        cc: "enquiry@neofairs.com",
         to: data["email"],
         subject: "Registered Successfully",
         html: `<!DOCTYPE html>
