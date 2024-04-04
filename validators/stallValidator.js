@@ -2,8 +2,8 @@
 const { z } = require('zod');
 
 const stallSchema = z.object({
-    name: z.string().min(1, { message: 'Name is required.' }),
-    hall_details: z.string().min(1, { message: 'Hall details are required.' }),
+    stallName: z.string().min(1, { message: 'Stall Name is required.' }),
+    hallId: z.string().min(1, { message: 'Hall Id is required.' }),
     exhibitor: z.string().min(1, { message: 'Exhibitor ID is required.' }),
 });
 

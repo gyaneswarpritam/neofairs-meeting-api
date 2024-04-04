@@ -2418,3 +2418,247 @@
  *       '500':
  *         description: Internal server error
  */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Stall:
+ *       type: object
+ *       properties:
+ *         exhibitor:
+ *           type: string
+ *           description: The ID of the exhibitor associated with the stall.
+ *         hallId:
+ *           type: string
+ *           description: The ID of the hall where the stall is located.
+ *         hallName:
+ *           type: string
+ *           description: The name of the hall where the stall is located.
+ *         stallName:
+ *           type: string
+ *           description: The name of the stall.
+ *         stallDescription:
+ *           type: string
+ *           description: The description of the stall.
+ *         name:
+ *           type: string
+ *           description: The name of the contact person.
+ *         email:
+ *           type: string
+ *           description: The email of the contact person.
+ *         phone:
+ *           type: string
+ *           description: The phone number of the contact person.
+ *         website:
+ *           type: string
+ *           description: The website of the stall.
+ *         address:
+ *           type: string
+ *           description: The address of the stall.
+ *         youtube:
+ *           type: string
+ *           description: The YouTube link of the stall.
+ *         whatsapp:
+ *           type: string
+ *           description: The WhatsApp link of the stall.
+ *         zoom:
+ *           type: string
+ *           description: The Zoom link of the stall.
+ *         linkedin:
+ *           type: string
+ *           description: The LinkedIn link of the stall.
+ *         meeting:
+ *           type: string
+ *           description: The meeting link of the stall.
+ *         facebook:
+ *           type: string
+ *           description: The Facebook link of the stall.
+ *         twitter:
+ *           type: string
+ *           description: The Twitter link of the stall.
+ *         stallImage:
+ *           type: string
+ *           format: uri
+ *           description: The image URL of the stall.
+ *         stallLogo:
+ *           type: string
+ *           format: uri
+ *           description: The logo URL of the stall.
+ *         companyLogo:
+ *           type: string
+ *           format: uri
+ *           description: The logo URL of the company.
+ *         productsList:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The title of the product.
+ *               url:
+ *                 type: string
+ *                 format: uri
+ *                 description: The URL of the product.
+ *               locked:
+ *                 type: boolean
+ *                 description: Indicates if the product is locked.
+ *         companyProfileList:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The title of the company profile.
+ *               url:
+ *                 type: string
+ *                 format: uri
+ *                 description: The URL of the company profile.
+ *               locked:
+ *                 type: boolean
+ *                 description: Indicates if the company profile is locked.
+ *         galleryImageList:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The title of the gallery image.
+ *               url:
+ *                 type: string
+ *                 format: uri
+ *                 description: The URL of the gallery image.
+ *               locked:
+ *                 type: boolean
+ *                 description: Indicates if the gallery image is locked.
+ *         galleryVideoList:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The title of the gallery video.
+ *               link:
+ *                 type: string
+ *                 format: uri
+ *                 description: The link of the gallery video.
+ *         stallVideoList:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The title of the stall video.
+ *               link:
+ *                 type: string
+ *                 format: uri
+ *                 description: The link of the stall video.
+ */
+
+/**
+ * @swagger
+ * /api/exhibitor/stall:
+ *   post:
+ *     summary: Create a new stall
+ *     tags:
+ *       - Exhibitor
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Stall'
+ *     responses:
+ *       '200':
+ *         description: Stall created successfully
+ *       '401':
+ *         description: Invalid data provided
+ *       '400':
+ *         description: Bad request
+ *       '500':
+ *         description: Internal server error
+ *
+ *   get:
+ *     summary: Get all stalls
+ *     tags:
+ *       - Exhibitor
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Stalls not found
+ *       '500':
+ *         description: Internal server error
+ *
+ * /api/exhibitor/stall/{id}:
+ *   get:
+ *     summary: Get a stall by ID
+ *     tags:
+ *       - Exhibitor
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the stall to retrieve
+ *     responses:
+ *       '200':
+ *         description: Successful response
+ *       '404':
+ *         description: Stall not found
+ *       '500':
+ *         description: Internal server error
+ *
+ *   put:
+ *     summary: Update a stall by ID
+ *     tags:
+ *       - Exhibitor
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the stall to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Stall'
+ *     responses:
+ *       '200':
+ *         description: Stall updated successfully
+ *       '401':
+ *         description: Invalid data provided
+ *       '404':
+ *         description: Stall not found
+ *       '400':
+ *         description: Bad request
+ *       '500':
+ *         description: Internal server error
+ *
+ *   delete:
+ *     summary: Delete a stall by ID
+ *     tags:
+ *       - Exhibitor
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the stall to delete
+ *     responses:
+ *       '200':
+ *         description: Stall deleted successfully
+ *       '404':
+ *         description: Stall not found
+ *       '500':
+ *         description: Internal server error
+ */

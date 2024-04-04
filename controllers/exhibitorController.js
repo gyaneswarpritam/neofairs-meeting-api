@@ -64,7 +64,8 @@ exports.login = async (req, res, next) => {
                     (err, token) => {
                         res.json({
                             success: true,
-                            token: 'Bearer ' + token
+                            token: 'Bearer ' + token,
+                            id: exhibitor.id
                         });
                     }
                 );

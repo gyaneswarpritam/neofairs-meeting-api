@@ -2,24 +2,21 @@ var mongoose = require("mongoose");
 
 var stallSchema = new mongoose.Schema(
     {
-        name: { type: String, required: true },
-        description: { type: String },
-        hall_details: {
+        stallName: { type: String, required: true },
+        stallDescription: { type: String },
+        hallId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "hall",
-            required: true,
+            ref: "hall"
         },
+        hallName: { type: String },
         visitng_card_details: { type: Object },
         stall_details: { type: Object },
         social_media: { type: Object },
-        products: [{ media: { type: String } }],
-        company_profile: { type: Object },
         active: { type: String, default: true },
         deleted: { type: String, default: false },
         exhibitor: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "exhibitor",
-            required: true,
+            ref: "exhibitor"
         },
     },
     {
@@ -28,7 +25,7 @@ var stallSchema = new mongoose.Schema(
 );
 
 stallSchema.index({ exhibitor: 1 });
-stallSchema.index({ hall_details: 1 });
-stallSchema.index({ name: 1 });
+stallSchema.index({ stallName: 1 });
+stallSchema.index({ hallId: 1 });
 
 module.exports = mongoose.model("Stall", stallSchema);
