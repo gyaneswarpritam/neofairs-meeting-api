@@ -2,7 +2,7 @@
 const Stall = require('../models/Stall');
 const stallSchema = require('../validators/stallValidator');
 const schemaValidator = require('../validators/schemaValidator');
-const { successResponse } = require('../utils/sendResponse');
+const { successResponse, notFoundResponse } = require('../utils/sendResponse');
 const ProductsListModel = require('../models/ProductsList');
 const StallVideoListModel = require('../models/StallVideoList');
 const GalleryImageListModel = require('../models/GalleryImageList');
@@ -14,7 +14,7 @@ exports.createStall = async (req, res) => {
         const validatedData = schemaValidator(stallSchema, req.body);
         if (validatedData.success) {
             // Create stall
-            const stall = await Stall.create(validatedData.data);
+            const stall = await Stall.create(req.body);
 
             // Create products list
             await ProductsListModel.insertMany(req.body.productsList.map(product => ({
@@ -78,13 +78,34 @@ exports.getStallById = async (req, res) => {
     }
 };
 
+exports.getStallByExhibitor = async (req, res) => {
+    try {
+        const stall = await Stall.findOne({ exhibitor: req.params.exhibitor })
+
+        if (!stall) {
+            const notFoundObj = notFoundResponse('Stall entry not found for this exhibitor');
+            res.status(notFoundObj.status).send(notFoundObj);
+        } else {
+            const productsList = await ProductsListModel.find({ stall: stall._id });
+            const companyProfileList = await CompanyProfileListModel.find({ stall: stall._id });
+            const galleryImageList = await GalleryImageListModel.find({ stall: stall._id });
+            const galleryVideoList = await GalleryVideoListModel.find({ stall: stall._id });
+            const stallVideoList = await StallVideoListModel.find({ stall: stall._id });
+
+            const successObj = successResponse('Stall List', { stall, productsList, companyProfileList, galleryImageList, galleryVideoList, stallVideoList });
+            res.status(successObj.status).send(successObj);
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 exports.updateStall = async (req, res) => {
     try {
         const validatedData = schemaValidator(stallSchema, req.body);
         if (validatedData.success) {
             // Update stall
-            const stall = await Stall.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            const stall = await Stall.findByIdAndUpdate(req.params.id, req.body, { new: true });
             if (!stall) {
                 return res.status(404).json({ message: 'Stall entry not found' });
             }

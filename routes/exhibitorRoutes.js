@@ -34,6 +34,7 @@ router.post('/login', exhibitorController.login);
 /*Stall Route*/
 router.post('/stall', passport.authenticate('jwt-exhibitor', { session: false }), stallController.createStall);
 router.get('/stall/:id', passport.authenticate('jwt-exhibitor', { session: false }), stallController.getStallById);
+router.get('/stall-by-exhibitor/:exhibitor', passport.authenticate('jwt-exhibitor', { session: false }), stallController.getStallByExhibitor);
 router.put('/stall/:id', passport.authenticate('jwt-exhibitor', { session: false }), stallController.updateStall);
 router.delete('/stall/:id', passport.authenticate('jwt-exhibitor', { session: false }), stallController.deleteStall);
 

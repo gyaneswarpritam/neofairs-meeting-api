@@ -7,7 +7,19 @@ const successResponse = (message, data) => {
         };
 
     } catch (error) {
-        console.error('SMS sending failed:', error);
+        console.error(error);
+    }
+};
+const notFoundResponse = (message) => {
+    try {
+        return {
+            status: 200,
+            message: message,
+            data: []
+        };
+
+    } catch (error) {
+        console.error(error);
     }
 };
 const successResponseWithRecordCount = (message, data, totalrecords, resultsPerPage) => {
@@ -24,4 +36,4 @@ const successResponseWithRecordCount = (message, data, totalrecords, resultsPerP
     }
 };
 
-module.exports = { successResponse, successResponseWithRecordCount };
+module.exports = { successResponse, successResponseWithRecordCount, notFoundResponse };
