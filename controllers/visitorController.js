@@ -4,12 +4,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Visitor = require('../models/Visitor');
 const authService = require('../services/authService');
-const { jwtSecret } = require('../config/config');
+const { jwtSecret, base_url } = require('../config/config');
 const schemaValidator = require('../validators/schemaValidator');
 const { visitorSchema, visitorLoginSchema } = require('../validators/visitorValidator');
 const emailController = require("./emailController");
 const { successResponse } = require('../utils/sendResponse');
-const stripe = require('stripe')('sk_test_45Dt0HNz04Ci2rEN2IXz2O6Y');
+const stripe = require('stripe')(process.env.STRIPE_SK_KEY);
 
 exports.register = async (req, res) => {
     try {
@@ -141,11 +141,11 @@ exports.createCheckout = async (req, res) => {
             payment_method_types: ['card'],
             line_items: lineItems,
             mode: 'payment',
-            success_url: 'http://localhost:3000/success',
-            metadata: {
-                username: 'Pritam Gyaneswar 1',
-                userId: 'example_user_id'
-            }
+            success_url: `${base_url}success`,
+            // metadata: {
+            //     username: 'Pritam Gyaneswar 1',
+            //     userId: 'example_user_id'
+            // }
         });
         res.json({ id: session.id })
     } catch (error) {
