@@ -6,6 +6,8 @@ const { jwtSecret } = require('../config/config');
 const hallController = require('../controllers/hallController');
 const visitorController = require('../controllers/visitorController');
 const exhibitorController = require('../controllers/exhibitorController');
+const settingController = require('../controllers/settingController');
+const locationChargesController = require('../controllers/locationChargesController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -46,4 +48,9 @@ router.get('/exhibitorById/:id', passport.authenticate('jwt-visitor', { session:
 router.get('/visitorList', passport.authenticate('jwt-visitor', { session: false }), visitorController.getAllVisitor);
 router.get('/visitorById/:id', passport.authenticate('jwt-visitor', { session: false }), visitorController.getVisitorById);
 
+/*Settings Route*/
+router.get('/settings', settingController.getAllSettings);
+
+/*location Charges Route*/
+router.get('/location-charges', locationChargesController.getAllLocationCharges);
 module.exports = router;
