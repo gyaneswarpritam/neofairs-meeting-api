@@ -5,6 +5,7 @@ const { exhibitorSchema, exhibitorLoginSchema } = require('../validators/exhibit
 const schemaValidator = require('../validators/schemaValidator');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/config');
+const { successResponse } = require('../utils/sendResponse');
 
 exports.register = async (req, res) => {
     try {
@@ -78,5 +79,44 @@ exports.login = async (req, res, next) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+    }
+};
+exports.getAllExhibitor = async (req, res) => {
+    try {
+        const exhibitors = await Exhibitor.find({});
+        if (!exhibitors || exhibitors.length === 0) {
+            return res.status(404).json({ message: 'No exhibitors found' });
+        }
+        const modifiedExhibitors = exhibitors.map(exhibitor => ({
+            _id: exhibitor._id,
+            firstName: exhibitor.firstName,
+            lastName: exhibitor.lastName,
+            email: exhibitor.email,
+            companyName: exhibitor.companyName
+        }));
+        const successObj = successResponse('Exhibitor List', modifiedExhibitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getExhibitorById = async (req, res) => {
+    try {
+        const exhibitor = await Exhibitor.findById(req.params.id);
+        if (!exhibitor) {
+            return res.status(404).json({ message: 'Exhibitor entry not found' });
+        }
+        const modifiedExhibitor = {
+            _id: exhibitor._id,
+            firstName: exhibitor.firstName,
+            lastName: exhibitor.lastName,
+            email: exhibitor.email,
+            companyName: exhibitor.companyName
+        };
+        const successObj = successResponse('Exhibitor Details', modifiedExhibitor);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

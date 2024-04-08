@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const visitorController = require('../controllers/visitorController');
 const passport = require('passport');
 const { jwtSecret } = require('../config/config');
+
+const hallController = require('../controllers/hallController');
+const visitorController = require('../controllers/visitorController');
+const exhibitorController = require('../controllers/exhibitorController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -27,5 +30,20 @@ passport.use('jwt-visitor', new JwtStrategy(jwtOptions, (jwtPayload, done) => {
 
 router.post('/register', visitorController.register);
 router.post('/login', visitorController.login);
+
+/*Stripe Checkout for registration*/
+router.post('/create-checkout-session', visitorController.createCheckout);
+
+/*Hall Route*/
+router.get('/hall', passport.authenticate('jwt-visitor', { session: false }), hallController.getAllHall);
+router.get('/hall/:id', passport.authenticate('jwt-visitor', { session: false }), hallController.getHallById);
+
+/*Exhibitor List Route*/
+router.get('/exhibitorList', passport.authenticate('jwt-visitor', { session: false }), exhibitorController.getAllExhibitor);
+router.get('/exhibitorById/:id', passport.authenticate('jwt-visitor', { session: false }), exhibitorController.getExhibitorById);
+
+/*Exhibitor List Route*/
+router.get('/visitorList', passport.authenticate('jwt-visitor', { session: false }), visitorController.getAllVisitor);
+router.get('/visitorById/:id', passport.authenticate('jwt-visitor', { session: false }), visitorController.getVisitorById);
 
 module.exports = router;

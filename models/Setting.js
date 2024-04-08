@@ -6,6 +6,7 @@ var settingSchema = new mongoose.Schema(
         endDateTime: { type: String, required: true },
         timezone: { type: String, required: true },
         duration: { type: String, required: true },
+        isPayment: { type: Boolean, default: false },
         active: { type: String, default: true },
         deleted: { type: String, default: false },
     },

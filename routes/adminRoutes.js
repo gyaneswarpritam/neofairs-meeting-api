@@ -16,6 +16,7 @@ const webinarController = require('../controllers/webinarController');
 const mediaController = require('../controllers/mediaController');
 const flashMessageController = require('../controllers/flashMessageController');
 const settingController = require('../controllers/settingController');
+const locationChargesController = require('../controllers/locationChargesController');
 
 const { jwtSecret } = require('../config/config');
 
@@ -141,5 +142,12 @@ router.get('/settings', passport.authenticate('jwt-admin', { session: false }), 
 router.get('/settings/:id', passport.authenticate('jwt-admin', { session: false }), settingController.getSettingById);
 router.put('/settings/:id', passport.authenticate('jwt-admin', { session: false }), settingController.updateSetting);
 router.delete('/settings/:id', passport.authenticate('jwt-admin', { session: false }), settingController.deleteSetting);
+
+/*Settings Route*/
+router.post('/location-charges', passport.authenticate('jwt-admin', { session: false }), locationChargesController.createLocationCharges);
+router.get('/location-charges', passport.authenticate('jwt-admin', { session: false }), locationChargesController.getAllLocationCharges);
+router.get('/location-charges/:id', passport.authenticate('jwt-admin', { session: false }), locationChargesController.getLocationChargesById);
+router.put('/location-charges/:id', passport.authenticate('jwt-admin', { session: false }), locationChargesController.updateLocationCharges);
+router.delete('/location-charges/:id', passport.authenticate('jwt-admin', { session: false }), locationChargesController.deleteLocationCharges);
 
 module.exports = router;

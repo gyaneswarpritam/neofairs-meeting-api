@@ -46,18 +46,18 @@ exports.getSettingById = async (req, res) => {
 
 exports.updateSetting = async (req, res) => {
     try {
-        const validatedData = schemaValidator(settingSchema, req.body);
-        if (validatedData.success) {
-            const setting = await Setting.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
-            if (!setting) {
-                return res.status(404).json({ message: 'Setting not found' });
-            }
-
-            // Respond with success message
-            res.status(200).json({ data: setting, message: 'Setting updated successfully' });
-        } else {
-            res.status(401).json({ message: validatedData.errors });
+        // const validatedData = schemaValidator(settingSchema, req.body);
+        // if (validatedData.success) {
+        const setting = await Setting.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!setting) {
+            return res.status(404).json({ message: 'Setting not found' });
         }
+
+        // Respond with success message
+        res.status(200).json({ data: setting, message: 'Setting updated successfully' });
+        // } else {
+        //     res.status(401).json({ message: validatedData.errors });
+        // }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
