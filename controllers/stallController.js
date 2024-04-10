@@ -58,14 +58,10 @@ exports.createStall = async (req, res) => {
     }
 };
 
-exports.getStallById = async (req, res) => {
+exports.getAllStall = async (req, res) => {
     try {
-        const stall = await Stall.findById(req.params.id)
-            .populate('productsList')
-            .populate('companyProfileList')
-            .populate('galleryImageList')
-            .populate('galleryVideoList')
-            .populate('stallVideoList');
+        const stall = await Stall.find({})
+            .populate('exhibitor').exec();
 
         if (!stall) {
             return res.status(404).json({ message: 'Stall entry not found' });
@@ -73,6 +69,28 @@ exports.getStallById = async (req, res) => {
 
         const successObj = successResponse('Stall List', stall);
         res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getStallById = async (req, res) => {
+    try {
+        const stall = await Stall.findById(req.params.id)
+
+        if (!stall) {
+            const notFoundObj = notFoundResponse('Stall entry not found for this exhibitor');
+            res.status(notFoundObj.status).send(notFoundObj);
+        } else {
+            const productsList = await ProductsListModel.find({ stall: stall._id });
+            const companyProfileList = await CompanyProfileListModel.find({ stall: stall._id });
+            const galleryImageList = await GalleryImageListModel.find({ stall: stall._id });
+            const galleryVideoList = await GalleryVideoListModel.find({ stall: stall._id });
+            const stallVideoList = await StallVideoListModel.find({ stall: stall._id });
+
+            const successObj = successResponse('Stall List', { stall, productsList, companyProfileList, galleryImageList, galleryVideoList, stallVideoList });
+            res.status(successObj.status).send(successObj);
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

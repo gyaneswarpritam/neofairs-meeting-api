@@ -19,7 +19,7 @@ var stallSchema = new mongoose.Schema(
         deleted: { type: String, default: false },
         exhibitor: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "exhibitor"
+            ref: "Exhibitor"
         },
     },
     {
