@@ -43,8 +43,6 @@ module.exports.getChatUser = async (req, res, next) => {
       });
     });
 
-    console.log(userIds, '#################')
-
     // Fetch user details for the extracted user IDs
     const visitors = await Visitor.find({ _id: { $in: Array.from(userIds) } });
     const modifiedVisitors = visitors.map(visitor => ({
