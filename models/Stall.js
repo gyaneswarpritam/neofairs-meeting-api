@@ -15,6 +15,7 @@ var stallSchema = new mongoose.Schema(
         stallImage: { type: String },
         stallLogo: { type: String },
         companyLogo: { type: String },
+        position: { type: String, default: "" },
         active: { type: String, default: true },
         deleted: { type: String, default: false },
         exhibitor: {

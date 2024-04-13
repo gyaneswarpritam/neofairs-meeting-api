@@ -17,6 +17,7 @@ const mediaController = require('../controllers/mediaController');
 const flashMessageController = require('../controllers/flashMessageController');
 const settingController = require('../controllers/settingController');
 const locationChargesController = require('../controllers/locationChargesController');
+const stallController = require('../controllers/stallController');
 
 const { jwtSecret } = require('../config/config');
 
@@ -149,5 +150,11 @@ router.get('/location-charges', passport.authenticate('jwt-admin', { session: fa
 router.get('/location-charges/:id', passport.authenticate('jwt-admin', { session: false }), locationChargesController.getLocationChargesById);
 router.put('/location-charges/:id', passport.authenticate('jwt-admin', { session: false }), locationChargesController.updateLocationCharges);
 router.delete('/location-charges/:id', passport.authenticate('jwt-admin', { session: false }), locationChargesController.deleteLocationCharges);
+
+/*Stall Route*/
+router.get('/all-stall', passport.authenticate('jwt-admin', { session: false }), stallController.getAllStall);
+router.get('/stall/:id', passport.authenticate('jwt-admin', { session: false }), stallController.getStallById);
+router.get('/stallByHall/:hallId', passport.authenticate('jwt-admin', { session: false }), stallController.getStallByHallId);
+router.put('/stall-position/:id', passport.authenticate('jwt-admin', { session: false }), stallController.updateStallPosition);
 
 module.exports = router;

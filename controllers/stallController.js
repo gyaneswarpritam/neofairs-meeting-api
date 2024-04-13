@@ -95,6 +95,21 @@ exports.getStallById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+exports.getStallByHallId = async (req, res) => {
+    try {
+        const stall = await Stall.find({ hallId: req.params.hallId })
+
+        if (!stall) {
+            const notFoundObj = notFoundResponse('Stall entry not found for this exhibitor');
+            res.status(notFoundObj.status).send(notFoundObj);
+        } else {
+            const successObj = successResponse('Stall List', stall);
+            res.status(successObj.status).send(successObj);
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 exports.getStallByExhibitor = async (req, res) => {
     try {
@@ -148,6 +163,19 @@ exports.updateStall = async (req, res) => {
         } else {
             res.status(401).json({ message: validatedData.errors });
         }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+exports.updateStallPosition = async (req, res) => {
+    try {
+        // Update stall
+        const stall = await Stall.findByIdAndUpdate(req.params.id, { position: req.body.position }, { new: true });
+        if (!stall) {
+            return res.status(404).json({ message: 'Stall entry not found' });
+        }
+        const successObj = successResponse('Stall updated', stall);
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
