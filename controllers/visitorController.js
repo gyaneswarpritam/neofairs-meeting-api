@@ -69,7 +69,8 @@ exports.login = async (req, res, next) => {
                     (err, token) => {
                         res.json({
                             success: true,
-                            token: 'Bearer ' + token
+                            token: 'Bearer ' + token,
+                            id: visitor.id
                         });
                     }
                 );
@@ -97,6 +98,27 @@ exports.getAllVisitor = async (req, res) => {
             email: visitor.email,
             companyName: visitor.companyName,
         }));
+        const successObj = successResponse('Visitor List', modifiedVisitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+exports.getAllChatVisitor = async (req, res) => {
+    try {
+        const visitors = await Visitor.find({ _id: { $ne: req.params.id }, active: true });
+
+        if (!visitors || visitors.length === 0) {
+            return res.status(404).json({ message: 'No visitors found' });
+        }
+        const modifiedVisitors = visitors.map(visitor => ({
+            _id: visitor._id,
+            firstName: visitor.firstName,
+            lastName: visitor.lastName,
+            email: visitor.email,
+            companyName: visitor.companyName,
+        }));
+
         const successObj = successResponse('Visitor List', modifiedVisitors);
         res.status(successObj.status).send(successObj);
     } catch (error) {

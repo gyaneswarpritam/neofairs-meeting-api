@@ -8,7 +8,7 @@ exports.createVisual = async (req, res) => {
     try {
         const validatedData = schemaValidator(visualSchema, req.body);
         if (validatedData.success) {
-            const visual = await Visual.create(validatedData.data);
+            const visual = await Visual.create(req.body);
             const successObj = successResponse('Visual Created', visual)
             res.status(successObj.status).send(successObj);
         } else {
@@ -48,7 +48,7 @@ exports.updateVisual = async (req, res) => {
     try {
         const validatedData = schemaValidator(visualSchema, req.body);
         if (validatedData.success) {
-            const visual = await Visual.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
+            const visual = await Visual.findByIdAndUpdate(req.params.id, req.body, { new: true });
             if (!visual) {
                 return res.status(404).json({ message: 'Visual entry not found' });
             }

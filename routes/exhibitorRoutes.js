@@ -6,6 +6,10 @@ const stallController = require('../controllers/stallController');
 const hallController = require('../controllers/hallController');
 const passport = require('passport');
 const { jwtSecret } = require('../config/config');
+const directoryController = require('../controllers/directoryController');
+const visualController = require('../controllers/visualController');
+const mediaController = require('../controllers/mediaController');
+const faqController = require('../controllers/faqController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -41,5 +45,11 @@ router.delete('/stall/:id', passport.authenticate('jwt-exhibitor', { session: fa
 /*Hall Route*/
 router.get('/hall', passport.authenticate('jwt-exhibitor', { session: false }), hallController.getAllHall);
 router.get('/hall/:id', passport.authenticate('jwt-exhibitor', { session: false }), hallController.getHallById);
+
+/*Resource Center Route*/
+router.get('/directory', passport.authenticate('jwt-exhibitor', { session: false }), directoryController.getAllDirectory);
+router.get('/visual', passport.authenticate('jwt-exhibitor', { session: false }), visualController.getAllVisual);
+router.get('/media', passport.authenticate('jwt-exhibitor', { session: false }), mediaController.getAllMedia);
+router.get('/faq', passport.authenticate('jwt-exhibitor', { session: false }), faqController.getAllFaq);
 
 module.exports = router;

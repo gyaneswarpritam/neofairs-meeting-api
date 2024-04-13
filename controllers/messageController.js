@@ -1,4 +1,6 @@
 const Messages = require("../models/Message");
+const Visitor = require("../models/Visitor");
+const { successResponse } = require("../utils/sendResponse");
 
 module.exports.getMessages = async (req, res, next) => {
   try {
@@ -19,6 +21,58 @@ module.exports.getMessages = async (req, res, next) => {
     res.json(projectedMessages);
   } catch (ex) {
     next(ex);
+  }
+};
+
+module.exports.getChatUser = async (req, res, next) => {
+  const visitorId = req.params.id; // Assuming visitorId is passed as a route parameter
+
+  try {
+    // Find messages where the current user (visitor) is either the sender or receiver
+    const messages = await Messages.find({
+      users: { $in: [visitorId] }
+    });
+
+    // Extract unique user IDs from the messages
+    const userIds = new Set();
+    messages.forEach(message => {
+      message.users.forEach(user => {
+        if (user !== visitorId) { // Check if the user is not the current visitor
+          userIds.add(user); // Add the user ID to the set
+        }
+      });
+    });
+
+    console.log(userIds, '#################')
+
+    // Fetch user details for the extracted user IDs
+    const visitors = await Visitor.find({ _id: { $in: Array.from(userIds) } });
+    const modifiedVisitors = visitors.map(visitor => ({
+      _id: visitor._id,
+      firstName: visitor.firstName,
+      lastName: visitor.lastName,
+      email: visitor.email,
+      companyName: visitor.companyName,
+    }));
+    const successObj = successResponse('Chat Visitor List', modifiedVisitors);
+    res.status(successObj.status).send(successObj);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports.checkChatUserExist = async (req, res, next) => {
+  try {
+    // Check if a message with the same sender and receiver IDs exists
+    const existingMessage = await Messages.findOne({
+      users: { $all: [req.body.from, req.body.to] }
+    });
+    if (existingMessage) return res.status(200).json({ status: 1, message: 'Chat already exist' });
+    return res.status(200).json({ status: 0, message: 'Chat not exist' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
