@@ -55,6 +55,7 @@ exports.login = async (req, res, next) => {
             // Check password
             const isMatch = await bcrypt.compare(password, visitor.password);
             if (isMatch) {
+                const updatedLoggeduser = await Visitor.findByIdAndUpdate(visitor.id, { loggedIn: true }, { new: true });
                 // Create JWT Payload
                 const payload = {
                     id: visitor.id,
@@ -77,6 +78,25 @@ exports.login = async (req, res, next) => {
             } else {
                 return res.status(400).json({ message: 'Username/Password is incorrect' });
             }
+        } else {
+            res.status(401).json({ message: validation.errors });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+exports.loggedOut = async (req, res, next) => {
+    try {
+
+        const loggedOutUpdate = await Visitor.findByIdAndUpdate(req.params.id, { loggedIn: false }, { new: true });
+
+        if (loggedOutUpdate) {
+            res.json({
+                success: true,
+                message: "Logged out"
+            });
         } else {
             res.status(401).json({ message: validation.errors });
         }
@@ -120,6 +140,16 @@ exports.getAllChatVisitor = async (req, res) => {
         }));
 
         const successObj = successResponse('Visitor List', modifiedVisitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+exports.getAllLoggedInVisitor = async (req, res) => {
+    try {
+        const visitorsCount = await Visitor.countDocuments({ loggedIn: true });
+
+        const successObj = successResponse('Visitor Count', visitorsCount);
         res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });

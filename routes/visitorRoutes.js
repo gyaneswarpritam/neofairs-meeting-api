@@ -16,6 +16,7 @@ const faqController = require('../controllers/faqController');
 const liveController = require('../controllers/liveController');
 const activityController = require('../controllers/activityController');
 const webinarController = require('../controllers/webinarController');
+const VisitedStallController = require('../controllers/VisitedStallController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -40,6 +41,7 @@ passport.use('jwt-visitor', new JwtStrategy(jwtOptions, (jwtPayload, done) => {
 
 router.post('/register', visitorController.register);
 router.post('/login', visitorController.login);
+router.post('/logout', visitorController.loggedOut);
 
 /*Stripe Checkout for registration*/
 router.post('/create-checkout-session', visitorController.createCheckout);
@@ -75,5 +77,10 @@ router.get('/faq', passport.authenticate('jwt-visitor', { session: false }), faq
 router.get('/webinar', passport.authenticate('jwt-visitor', { session: false }), webinarController.getAllWebinar);
 router.get('/live', passport.authenticate('jwt-visitor', { session: false }), liveController.getAllLive);
 router.get('/activity', passport.authenticate('jwt-visitor', { session: false }), activityController.getAllActivities);
+
+
+router.get('/loggedin-user', passport.authenticate('jwt-visitor', { session: false }), visitorController.getAllLoggedInVisitor);
+router.get('/visited-stall/:visitorId', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.getAllVisitedStallForVisitor);
+router.post('/visited-stall', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.createVisitedStall);
 
 module.exports = router;
