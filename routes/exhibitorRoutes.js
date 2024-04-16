@@ -10,6 +10,9 @@ const directoryController = require('../controllers/directoryController');
 const visualController = require('../controllers/visualController');
 const mediaController = require('../controllers/mediaController');
 const faqController = require('../controllers/faqController');
+const webinarController = require('../controllers/webinarController');
+const liveController = require('../controllers/liveController');
+const activityController = require('../controllers/activityController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -51,5 +54,10 @@ router.get('/directory', passport.authenticate('jwt-exhibitor', { session: false
 router.get('/visual', passport.authenticate('jwt-exhibitor', { session: false }), visualController.getAllVisual);
 router.get('/media', passport.authenticate('jwt-exhibitor', { session: false }), mediaController.getAllMedia);
 router.get('/faq', passport.authenticate('jwt-exhibitor', { session: false }), faqController.getAllFaq);
+
+
+router.get('/webinar', passport.authenticate('jwt-exhibitor', { session: false }), webinarController.getAllWebinar);
+router.get('/live', passport.authenticate('jwt-exhibitor', { session: false }), liveController.getAllLive);
+router.get('/activity', passport.authenticate('jwt-exhibitor', { session: false }), activityController.getAllActivities);
 
 module.exports = router;
