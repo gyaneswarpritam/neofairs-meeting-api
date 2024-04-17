@@ -17,6 +17,7 @@ const liveController = require('../controllers/liveController');
 const activityController = require('../controllers/activityController');
 const webinarController = require('../controllers/webinarController');
 const VisitedStallController = require('../controllers/VisitedStallController');
+const briefCaseController = require('../controllers/briefCaseController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -64,7 +65,7 @@ router.get('/settings', settingController.getAllSettings);
 
 /*Stall Route*/
 router.get('/all-stall', passport.authenticate('jwt-visitor', { session: false }), stallController.getAllStall);
-router.get('/stall/:id', passport.authenticate('jwt-visitor', { session: false }), stallController.getStallById);
+router.get('/stall/:id/:visitorId', passport.authenticate('jwt-visitor', { session: false }), stallController.getByVisitorByStallById);
 
 /*location Charges Route*/
 router.get('/location-charges', locationChargesController.getAllLocationCharges);
@@ -82,5 +83,6 @@ router.get('/activity', passport.authenticate('jwt-visitor', { session: false })
 router.get('/loggedin-user', passport.authenticate('jwt-visitor', { session: false }), visitorController.getAllLoggedInVisitor);
 router.get('/visited-stall/:visitorId', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.getAllVisitedStallForVisitor);
 router.post('/visited-stall', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.createVisitedStall);
+router.post('/add-briefcase', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.createBriefCase);
 
 module.exports = router;

@@ -1,79 +1,62 @@
 // controllers/stallController.js
-const Stall = require('../models/Stall');
-const stallSchema = require('../validators/stallValidator');
-const schemaValidator = require('../validators/schemaValidator');
-const { successResponse, notFoundResponse } = require('../utils/sendResponse');
-const ProductsListModel = require('../models/ProductsList');
-const StallVideoListModel = require('../models/StallVideoList');
-const GalleryImageListModel = require('../models/GalleryImageList');
-const GalleryVideoListModel = require('../models/GalleryVideoList');
-const CompanyProfileListModel = require('../models/CompanyProfileList');
 const Briefcase = require('../models/Briefcase');
+const { successResponse, notFoundResponse } = require('../utils/sendResponse');
 
-exports.createStall = async (req, res) => {
+exports.createBriefCase = async (req, res) => {
     try {
-        const validatedData = schemaValidator(stallSchema, req.body);
-        if (validatedData.success) {
-            // Create stall
-            const stall = await Stall.create(req.body);
+        const { stall, visitor, exhibitor, product } = req.body;
 
-            // Create products list
-            await ProductsListModel.insertMany(req.body.productsList.map(product => ({
-                ...product,
-                stall: stall._id
-            })));
+        // Check if the combination already exists
+        const existingData = await Briefcase.findOne({ stall, visitor, exhibitor, product });
 
-            // Create company profile list
-            await CompanyProfileListModel.insertMany(req.body.companyProfileList.map(profile => ({
-                ...profile,
-                stall: stall._id
-            })));
-
-            // Create gallery image list
-            await GalleryImageListModel.insertMany(req.body.galleryImageList.map(image => ({
-                ...image,
-                stall: stall._id
-            })));
-
-            // Create gallery video list
-            await GalleryVideoListModel.insertMany(req.body.galleryVideoList.map(video => ({
-                title: video.title,
-                url: video.link,
-                stall: stall._id
-            })));
-
-            // Create stall video list
-            await StallVideoListModel.insertMany(req.body.stallVideoList.map(video => ({
-                title: video.title,
-                url: video.link,
-                stall: stall._id
-            })));
-
-            const successObj = successResponse('Stall Created', stall);
-            res.status(successObj.status).send(successObj);
-        } else {
-            res.status(401).json({ message: validatedData.errors });
+        if (existingData) {
+            const successObj = successResponse('Already Added', []);
+            return res.status(successObj.status).send(successObj);
         }
+
+        // If not, create new data
+        const BriefcaseData = await Briefcase.create(req.body);
+        const successObj = successResponse('Stall Created', BriefcaseData);
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
-exports.getAllStall = async (req, res) => {
-    try {
-        const stall = await Stall.find({})
-            .populate('exhibitor').exec();
 
-        if (!stall) {
-            return res.status(404).json({ message: 'Stall entry not found' });
+exports.getAllBriefcaseForVisitor = async (req, res) => {
+    try {
+        const Briefcases = await Briefcase.find({ visitor: req.params.visitorId })
+            .populate({
+                path: 'exhibitor',
+                select: 'firstName lastName companyName email phoneNo' // Select only the fields you need
+            })
+            .populate({
+                path: 'stall',
+                select: 'stallName' // Select only the fields you need
+            })
+            .exec();
+        if (!Briefcases || Briefcases.length === 0) {
+            return res.status(404).json({ message: 'No visited stalls found for this visitor' });
         }
 
-        const successObj = successResponse('Stall List', stall);
+        // Map the visited stalls to extract required information
+        const stallList = Briefcases.map(stall => ({
+            exhibitor: stall.exhibitor.firstName + " " + stall.exhibitor.lastName,
+            companyName: stall.exhibitor.companyName,
+            exhibitorEmail: stall.exhibitor.email,
+            exhibitorPhone: stall.exhibitor.phoneNo,
+            stallName: stall.stall.stallName,
+            updatedAt: stall.updatedAt
+        }));
+
+        const successObj = successResponse('Visited Stall List', stallList);
         res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 exports.getStallById = async (req, res) => {
     try {
@@ -96,51 +79,6 @@ exports.getStallById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-exports.getByVisitorByStallById = async (req, res) => {
-    try {
-        const stallId = req.params.id;
-        const visitorId = req.params.visitorId;
-
-        const stall = await Stall.findById(stallId);
-
-        if (!stall) {
-            const notFoundObj = notFoundResponse('Stall entry not found for this exhibitor');
-            return res.status(notFoundObj.status).send(notFoundObj);
-        }
-
-        const productsList = await ProductsListModel.find({ stall: stall._id });
-        const companyProfileList = await CompanyProfileListModel.find({ stall: stall._id });
-        const galleryImageList = await GalleryImageListModel.find({ stall: stall._id });
-        const galleryVideoList = await GalleryVideoListModel.find({ stall: stall._id });
-        const stallVideoList = await StallVideoListModel.find({ stall: stall._id });
-
-        // Fetch briefcase items for the stall and visitor
-        const briefcaseItems = await Briefcase.find({ stall: stall._id, visitor: visitorId }).select('product');
-
-        // Create a set of product IDs in the briefcase for quick lookup
-        const briefcaseProductIds = new Set(briefcaseItems.map(item => item.product.toString()));
-
-        // Add briefcase flag to each product
-        const productsWithBriefcaseFlag = productsList.map(product => ({
-            ...product.toObject(),
-            briefcase: briefcaseProductIds.has(product._id.toString())
-        }));
-
-        const successObj = successResponse('Stall List', {
-            stall,
-            productsList: productsWithBriefcaseFlag,
-            companyProfileList,
-            galleryImageList,
-            galleryVideoList,
-            stallVideoList
-        });
-        res.status(successObj.status).send(successObj);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
 exports.getStallByHallId = async (req, res) => {
     try {
         const stall = await Stall.find({ hallId: req.params.hallId })
