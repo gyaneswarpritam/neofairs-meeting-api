@@ -84,5 +84,7 @@ router.get('/loggedin-user', passport.authenticate('jwt-visitor', { session: fal
 router.get('/visited-stall/:visitorId', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.getAllVisitedStallForVisitor);
 router.post('/visited-stall', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.createVisitedStall);
 router.post('/add-briefcase', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.createBriefCase);
+router.get('/briefcase/:visitorId', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.getAllBriefcaseForVisitor);
+router.put('/briefcase/:id', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.updateBriefcase);
 
 module.exports = router;

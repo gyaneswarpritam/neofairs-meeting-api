@@ -4,22 +4,22 @@ var briefcaseSchema = new mongoose.Schema(
     {
         stall: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "stall",
+            ref: "Stall",
             required: true,
         },
         product: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "product",
+            ref: "ProductsList",
             required: true,
         },
         exhibitor: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "exhibitor",
+            ref: "Exhibitor",
             required: true,
         },
         visitor: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "visitor",
+            ref: "Visitor",
             required: true,
         },
         catalog: { type: Boolean, default: false },
