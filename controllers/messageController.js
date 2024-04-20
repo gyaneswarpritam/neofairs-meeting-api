@@ -32,7 +32,6 @@ module.exports.getChatUser = async (req, res, next) => {
     const messages = await Messages.find({
       users: { $in: [visitorId] }
     });
-
     // Extract unique user IDs from the messages
     const userIds = new Set();
     messages.forEach(message => {

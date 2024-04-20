@@ -68,6 +68,50 @@ exports.getAllBriefcaseForVisitor = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+exports.getAllBriefcaseForExhibitor = async (req, res) => {
+    try {
+        const Briefcases = await Briefcase.find({ exhibitor: req.params.exhibitorId, catalog: true })
+            .populate({
+                path: 'visitor',
+                select: 'firstName lastName companyName email phoneNo'
+            })
+            .populate({
+                path: 'stall',
+                select: 'stallName'
+            })
+            .populate({
+                path: 'product',
+                select: 'title url locked like review active deleted' // Adjust fields as needed
+            })
+            .exec();
+        if (!Briefcases || Briefcases.length === 0) {
+            const notFoundObj = notFoundResponse('No Briefcase data for this visitor');
+            return res.status(notFoundObj.status).send(notFoundObj);
+        }
+
+        const stallList = Briefcases.map(stall => ({
+            visitor: stall.visitor.firstName + " " + stall.visitor.lastName,
+            companyName: stall.visitor.companyName,
+            visitorEmail: stall.visitor.email,
+            visitorPhone: stall.visitor.phoneNo,
+            stallName: stall.stall.stallName,
+            productName: stall.product.title,
+            productUrl: stall.product.url,
+            productLocked: stall.product.locked,
+            productLike: stall.product.like,
+            productReview: stall.product.review,
+            productActive: stall.product.active,
+            productDeleted: stall.product.deleted,
+            catalog: stall.catalog,
+            id: stall._id,
+            updatedAt: stall.updatedAt
+        }));
+        const successObj = successResponse('Visited Stall List', stallList);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 exports.updateBriefcase = async (req, res) => {
     try {
