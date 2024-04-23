@@ -22,6 +22,7 @@ const reportController = require('../controllers/reportController');
 const visitorController = require('../controllers/visitorController');
 const exhibitorController = require('../controllers/exhibitorController');
 const briefCaseController = require('../controllers/briefCaseController');
+const trackController = require('../controllers/trackController');
 
 const { jwtSecret } = require('../config/config');
 const Visitor = require('../models/Visitor');
@@ -171,7 +172,7 @@ router.get('/logged-exhibitor-report', passport.authenticate('jwt-admin', { sess
 router.get('/joined-visitor-report', passport.authenticate('jwt-admin', { session: false }), visitorController.getAllJoinedVisitorList);
 router.get('/joined-exhibitor-report', passport.authenticate('jwt-admin', { session: false }), exhibitorController.getAllJoinedExhibitorList);
 router.get('/catalogue-report', passport.authenticate('jwt-admin', { session: false }), briefCaseController.getAllBriefcaseAdmin);
-// router.get('/visitor-tracking-report', passport.authenticate('jwt-admin', { session: false }), exhibitorController.getAllJoinedExhibitorList);
+router.get('/visitor-tracking-report', passport.authenticate('jwt-admin', { session: false }), trackController.getTrackVisitor);
 // router.get('/exhibitor-tracking-report', passport.authenticate('jwt-admin', { session: false }), reportController.getAllStall);
 
 module.exports = router;
