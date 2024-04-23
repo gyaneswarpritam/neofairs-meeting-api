@@ -28,7 +28,6 @@ exports.register = async (req, res) => {
             // Save the visitor to the database
             const visitorData = await visitor.save();
             const emailData = await emailController.sendRegisteredMail(visitorData);
-            console.log(emailData, '^^^^^^^^^^^^^6')
             // Respond with success message
             res.status(201).json({ message: 'Visitor registered successfully' });
         } else {
@@ -55,7 +54,14 @@ exports.login = async (req, res, next) => {
             // Check password
             const isMatch = await bcrypt.compare(password, visitor.password);
             if (isMatch) {
-                const updatedLoggeduser = await Visitor.findByIdAndUpdate(visitor.id, { loggedIn: true }, { new: true });
+                const currentDate = new Date();
+                const utcFormat = currentDate.toISOString();
+                const updatedLoggeduser = await Visitor.findByIdAndUpdate(visitor.id,
+                    {
+                        loggedIn: true,
+                        loggedInIP: req.body.loggedInIP,
+                        loggedInTime: utcFormat
+                    }, { new: true });
                 // Create JWT Payload
                 const payload = {
                     id: visitor.id,

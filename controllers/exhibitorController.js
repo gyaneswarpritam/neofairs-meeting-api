@@ -51,12 +51,20 @@ exports.login = async (req, res, next) => {
             // Check password
             const isMatch = await bcrypt.compare(password, exhibitor.password);
             if (isMatch) {
+                const currentDate = new Date();
+                const utcFormat = currentDate.toISOString();
+                const updatedLoggeduser = await Exhibitor.findByIdAndUpdate(exhibitor.id,
+                    {
+                        loggedIn: true,
+                        loggedInIP: req.body.loggedInIP,
+                        loggedInTime: utcFormat
+                    }, { new: true });
+
                 // Create JWT Payload
                 const payload = {
                     id: exhibitor.id,
                     email: exhibitor.email
                 };
-
                 // Sign token
                 jwt.sign(
                     payload,
