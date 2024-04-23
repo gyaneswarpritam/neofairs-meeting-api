@@ -13,6 +13,8 @@ const visitorSchema = new mongoose.Schema({
     address: { type: String, required: true },
     country: { type: String, required: true },
     phoneNo: { type: String, required: true },
+    loggedInTime: { type: String, default: '' },
+    loggedInIP: { type: String, default: '' },
     deleted: { type: Boolean, default: false },
     password: { type: String },
     loggedIn: { type: Boolean, default: false },

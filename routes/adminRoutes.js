@@ -18,8 +18,13 @@ const flashMessageController = require('../controllers/flashMessageController');
 const settingController = require('../controllers/settingController');
 const locationChargesController = require('../controllers/locationChargesController');
 const stallController = require('../controllers/stallController');
+const reportController = require('../controllers/reportController');
+const visitorController = require('../controllers/visitorController');
+const exhibitorController = require('../controllers/exhibitorController');
+const briefCaseController = require('../controllers/briefCaseController');
 
 const { jwtSecret } = require('../config/config');
+const Visitor = require('../models/Visitor');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -156,5 +161,17 @@ router.get('/all-stall', passport.authenticate('jwt-admin', { session: false }),
 router.get('/stall/:id', passport.authenticate('jwt-admin', { session: false }), stallController.getStallById);
 router.get('/stallByHall/:hallId', passport.authenticate('jwt-admin', { session: false }), stallController.getStallByHallId);
 router.put('/stall-position/:id', passport.authenticate('jwt-admin', { session: false }), stallController.updateStallPosition);
+
+/*Reports*/
+router.get('/visitor-report', passport.authenticate('jwt-admin', { session: false }), reportController.visitorReport);
+router.get('/exhibitor-report', passport.authenticate('jwt-admin', { session: false }), reportController.exhibitorReport);
+router.get('/visited-stall-report', passport.authenticate('jwt-admin', { session: false }), reportController.getAllVisitedStall);
+router.get('/logged-visitor-report', passport.authenticate('jwt-admin', { session: false }), visitorController.getAllLoggedInVisitorList);
+router.get('/logged-exhibitor-report', passport.authenticate('jwt-admin', { session: false }), exhibitorController.getAllLoggedInExhibitorList);
+router.get('/joined-visitor-report', passport.authenticate('jwt-admin', { session: false }), visitorController.getAllJoinedVisitorList);
+router.get('/joined-exhibitor-report', passport.authenticate('jwt-admin', { session: false }), exhibitorController.getAllJoinedExhibitorList);
+router.get('/catalogue-report', passport.authenticate('jwt-admin', { session: false }), briefCaseController.getAllBriefcaseAdmin);
+// router.get('/visitor-tracking-report', passport.authenticate('jwt-admin', { session: false }), exhibitorController.getAllJoinedExhibitorList);
+// router.get('/exhibitor-tracking-report', passport.authenticate('jwt-admin', { session: false }), reportController.getAllStall);
 
 module.exports = router;

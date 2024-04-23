@@ -8,7 +8,7 @@ const { jwtSecret, base_url } = require('../config/config');
 const schemaValidator = require('../validators/schemaValidator');
 const { visitorSchema, visitorLoginSchema } = require('../validators/visitorValidator');
 const emailController = require("./emailController");
-const { successResponse } = require('../utils/sendResponse');
+const { successResponse, notFoundResponse } = require('../utils/sendResponse');
 const stripe = require('stripe')(process.env.STRIPE_SK_KEY);
 
 exports.register = async (req, res) => {
@@ -150,6 +150,53 @@ exports.getAllLoggedInVisitor = async (req, res) => {
         const visitorsCount = await Visitor.countDocuments({ loggedIn: true });
 
         const successObj = successResponse('Visitor Count', visitorsCount);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+exports.getAllLoggedInVisitorList = async (req, res) => {
+    try {
+        const visitor = await Visitor.find({ loggedIn: true });
+        if (visitor.length == 0) {
+            const successObj = notFoundResponse('No Visitor List');
+            res.status(successObj.status).send(successObj);
+            return;
+        }
+        const modifiedVisitors = visitor.map(visitor => ({
+            _id: visitor._id,
+            name: visitor.firstName + " " + visitor.lastName,
+            phoneNo: visitor.phoneNo,
+            email: visitor.email,
+            companyName: visitor.companyName,
+            loggedInTime: visitor.loggedInTime,
+            loggedInIP: visitor.loggedInIP
+        }));
+        const successObj = successResponse('Visitor List', modifiedVisitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getAllJoinedVisitorList = async (req, res) => {
+    try {
+        const visitor = await Visitor.find({ active: true });
+        if (visitor.length == 0) {
+            const successObj = notFoundResponse('No Visitor List');
+            res.status(successObj.status).send(successObj);
+            return;
+        }
+        const modifiedVisitors = visitor.map(visitor => ({
+            _id: visitor._id,
+            name: visitor.firstName + " " + visitor.lastName,
+            phoneNo: visitor.phoneNo,
+            email: visitor.email,
+            companyName: visitor.companyName,
+            loggedInTime: visitor.loggedInTime,
+            loggedInIP: visitor.loggedInIP
+        }));
+        const successObj = successResponse('Visitor List', modifiedVisitors);
         res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });

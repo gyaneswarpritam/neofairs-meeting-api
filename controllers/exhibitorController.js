@@ -5,7 +5,7 @@ const { exhibitorSchema, exhibitorLoginSchema } = require('../validators/exhibit
 const schemaValidator = require('../validators/schemaValidator');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/config');
-const { successResponse } = require('../utils/sendResponse');
+const { successResponse, notFoundResponse } = require('../utils/sendResponse');
 
 exports.register = async (req, res) => {
     try {
@@ -100,6 +100,54 @@ exports.getAllExhibitor = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.getAllLoggedInExhibitorList = async (req, res) => {
+    try {
+        const exhibitor = await Exhibitor.find({ loggedIn: true });
+        if (exhibitor.length == 0) {
+            const successObj = notFoundResponse('No exhibitor List');
+            res.status(successObj.status).send(successObj);
+            return;
+        }
+        const modifiedexhibitors = exhibitor.map(exhibitor => ({
+            _id: exhibitor._id,
+            name: exhibitor.firstName + " " + exhibitor.lastName,
+            phoneNo: exhibitor.phoneNo,
+            email: exhibitor.email,
+            companyName: exhibitor.companyName,
+            loggedInTime: exhibitor.loggedInTime,
+            loggedInIP: exhibitor.loggedInIP
+        }));
+        const successObj = successResponse('exhibitor List', modifiedexhibitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+exports.getAllJoinedExhibitorList = async (req, res) => {
+    try {
+        const exhibitor = await Exhibitor.find({ active: true });
+        if (exhibitor.length == 0) {
+            const successObj = notFoundResponse('No exhibitor List');
+            res.status(successObj.status).send(successObj);
+            return;
+        }
+        const modifiedexhibitors = exhibitor.map(exhibitor => ({
+            _id: exhibitor._id,
+            name: exhibitor.firstName + " " + exhibitor.lastName,
+            phoneNo: exhibitor.phoneNo,
+            email: exhibitor.email,
+            companyName: exhibitor.companyName,
+            loggedInTime: exhibitor.loggedInTime,
+            loggedInIP: exhibitor.loggedInIP
+        }));
+        const successObj = successResponse('exhibitor List', modifiedexhibitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 exports.getExhibitorById = async (req, res) => {
     try {
