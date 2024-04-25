@@ -19,6 +19,7 @@ const webinarController = require('../controllers/webinarController');
 const VisitedStallController = require('../controllers/VisitedStallController');
 const briefCaseController = require('../controllers/briefCaseController');
 const trackController = require('../controllers/trackController');
+const slotsController = require('../controllers/slotsController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -89,5 +90,7 @@ router.get('/briefcase/:visitorId', passport.authenticate('jwt-visitor', { sessi
 router.put('/briefcase/:id', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.updateBriefcase);
 
 router.post('/trackVisitor', passport.authenticate('jwt-visitor', { session: false }), trackController.createTrackVisitor);
+router.post('/book-slot', passport.authenticate('jwt-visitor', { session: false }), slotsController.bookSlot);
+router.post('/get-exhibitionDate', passport.authenticate('jwt-visitor', { session: false }), slotsController.getExhibitionDate);
 
 module.exports = router;
