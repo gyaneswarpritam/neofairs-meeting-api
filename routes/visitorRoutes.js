@@ -91,6 +91,8 @@ router.put('/briefcase/:id', passport.authenticate('jwt-visitor', { session: fal
 
 router.post('/trackVisitor', passport.authenticate('jwt-visitor', { session: false }), trackController.createTrackVisitor);
 router.post('/book-slot', passport.authenticate('jwt-visitor', { session: false }), slotsController.bookSlot);
-router.post('/get-exhibitionDate', passport.authenticate('jwt-visitor', { session: false }), slotsController.getExhibitionDate);
+router.get('/get-exhibitionDate', passport.authenticate('jwt-visitor', { session: false }), slotsController.getExhibitionDate);
+router.get('/list-slots', passport.authenticate('jwt-visitor', { session: false }), slotsController.listSlots);
+router.get('/list-booked-slots', passport.authenticate('jwt-visitor', { session: false }), slotsController.listBookedSlots);
 
 module.exports = router;

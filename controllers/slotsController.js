@@ -428,7 +428,7 @@ exports.listBookedSlots = async (req, res) => {
       };
     });
 
-    return res.status(200).json({ success: true, bookings: formattedSlots });
+    return res.status(200).json({ success: true, data: formattedSlots });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
