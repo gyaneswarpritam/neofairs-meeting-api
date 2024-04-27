@@ -16,6 +16,7 @@ const activityController = require('../controllers/activityController');
 const visitorController = require('../controllers/visitorController');
 const VisitedStallController = require('../controllers/VisitedStallController');
 const briefCaseController = require('../controllers/briefCaseController');
+const slotsController = require('../controllers/slotsController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -66,4 +67,8 @@ router.get('/activity', passport.authenticate('jwt-exhibitor', { session: false 
 router.get('/loggedin-user', passport.authenticate('jwt-exhibitor', { session: false }), visitorController.getAllLoggedInVisitor);
 router.get('/visited-stall/:exhibitorId', passport.authenticate('jwt-exhibitor', { session: false }), VisitedStallController.getAllVisitedStallForExhibitor);
 router.get('/briefcase/:exhibitorId', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.getAllBriefcaseForExhibitor);
+
+router.get('/get-requested-slots', passport.authenticate('jwt-exhibitor', { session: false }), slotsController.getVisitorsList);
+router.post('/change-status', passport.authenticate('jwt-exhibitor', { session: false }), slotsController.changeStatus);
+
 module.exports = router;
