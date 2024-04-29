@@ -22,14 +22,15 @@ const notFoundResponse = (message) => {
         console.error(error);
     }
 };
-const successResponseWithRecordCount = (message, data, totalrecords, resultsPerPage) => {
+const successResponseWithRecordCount = (message, data, totalrecords) => {
     try {
         return {
             status: 200,
             message: message,
             data,
             totalCount: totalrecords,
-            totalPages: parseInt(Math.ceil(totalrecords / resultsPerPage)),
+            // totalPages: totalPages,
+            // currentPage
         };
     } catch (error) {
         console.error(error);

@@ -1,7 +1,7 @@
 
 const TrackExhibitor = require('../models/TrackExhibitor');
 const TrackVisitor = require('../models/TrackVisitor');
-const { successResponse } = require('../utils/sendResponse');
+const { successResponse, successResponseWithRecordCount } = require('../utils/sendResponse');
 
 exports.createTrackVisitor = async (req, res) => {
     try {
@@ -22,32 +22,28 @@ exports.createTrackExhibitor = async (req, res) => {
     }
 };
 
-
 exports.getTrackVisitor = async (req, res) => {
     try {
+        // Extract limit and offset from query parameters
+        // const { limit = 10, offset = 0 } = req.query;
+
         const visitedStalls = await TrackVisitor.find({})
             .populate({
                 path: 'visitor',
                 select: 'firstName lastName companyName email phoneNo' // Select only the fields you need
             })
+            // .skip(Number(offset)) // Skip the specified number of documents
+            // .limit(Number(limit)) // Limit the number of documents returned
+            .sort({ createdAt: -1 })
             .exec();
-        // if (!visitedStalls || visitedStalls.length === 0) {
-        //     return res.status(404).json({ message: 'No visited stalls found for this visitor' });
-        // }
-
-        // // Map the visited stalls to extract required information
-        // const stallList = visitedStalls.map(stall => ({
-        //     exhibitor: stall.exhibitor.firstName + " " + stall.exhibitor.lastName,
-        //     companyName: stall.exhibitor.companyName,
-        //     exhibitorEmail: stall.exhibitor.email,
-        //     exhibitorPhone: stall.exhibitor.phoneNo,
-        //     stallName: stall.stall.stallName,
-        //     updatedAt: stall.updatedAt
-        // }));
-
-        const successObj = successResponse('Track Visitor List', visitedStalls);
+        const totalCount = await TrackVisitor.countDocuments();
+        // const totalPages = Math.ceil(totalCount / limit);
+        // const currentPage = Math.ceil(offset / limit) + 1;
+        const successObj = successResponseWithRecordCount('Track Visitor List', visitedStalls, totalCount);
         res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
+
