@@ -77,7 +77,8 @@ exports.login = async (req, res, next) => {
                         res.json({
                             success: true,
                             token: 'Bearer ' + token,
-                            id: visitor.id
+                            id: visitor.id,
+                            name: visitor.firstName + " " + visitor.lastName
                         });
                     }
                 );
