@@ -9,6 +9,8 @@ const schemaValidator = require('../validators/schemaValidator');
 const { visitorSchema, visitorLoginSchema } = require('../validators/visitorValidator');
 const emailController = require("./emailController");
 const { successResponse, notFoundResponse } = require('../utils/sendResponse');
+const Exhibitor = require('../models/Exhibitor');
+const Stall = require('../models/Stall');
 const stripe = require('stripe')(process.env.STRIPE_SK_KEY);
 
 exports.register = async (req, res) => {
@@ -256,5 +258,83 @@ exports.createCheckout = async (req, res) => {
         res.json({ id: session.id })
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+exports.matchMaking = async (req, res) => {
+    const visitorId = req.params.visitorId;
+
+    try {
+        // Find the visitor by ID
+        const visitor = await Visitor.findById(visitorId);
+
+        // If visitor not found, return error
+        if (!visitor) {
+            return res.status(404).json({ message: 'Visitor not found' });
+        }
+
+        // Array to store exhibitors with matching percentage
+        const matchedExhibitors = [];
+
+        // Find all exhibitors where active is true
+        const exhibitors = await Exhibitor.find({ active: true });
+
+        // Calculate matching percentage for each exhibitor
+        for (const exhibitor of exhibitors) {
+            let matchCount = 0;
+            let totalProducts = 0;
+
+            // Loop through each product category of the visitor
+            Object.keys(visitor.productInfo).forEach(category => {
+                // Check if exhibitor has the same category
+                if (exhibitor.productInfo.hasOwnProperty(category)) {
+                    const visitorProducts = visitor.productInfo[category];
+                    const exhibitorProducts = exhibitor.productInfo[category];
+
+                    // If both products are arrays, count matching products
+                    if (Array.isArray(visitorProducts) && Array.isArray(exhibitorProducts)) {
+                        visitorProducts.forEach(product => {
+                            if (exhibitorProducts.includes(product)) {
+                                matchCount++;
+                            }
+                        });
+                        totalProducts += visitorProducts.length;
+                    } else {
+                        // If not arrays, compare directly
+                        if (visitorProducts === exhibitorProducts) {
+                            matchCount++;
+                        }
+                        totalProducts++;
+                    }
+                }
+            });
+
+            // Calculate matching percentage
+            const matchingPercentage = (matchCount / totalProducts) * 100;
+
+            // Get the stall associated with the exhibitor
+            const stall = await Stall.findOne({ exhibitor: exhibitor._id });
+
+            // Add exhibitor, matching percentage, and stall ID to array
+            if (stall) {
+                matchedExhibitors.push({
+                    exhibitorName: exhibitor.companyName,
+                    matchingPercentage: matchingPercentage.toFixed(2) + '%',
+                    stallId: stall._id
+                });
+            }
+        }
+
+        // Sort exhibitors by matching percentage in descending order
+        matchedExhibitors.sort((a, b) => b.matchingPercentage - a.matchingPercentage);
+
+        // Get top 5 exhibitors with percentage
+        const top5Exhibitors = matchedExhibitors.slice(0, 5);
+
+        const successObj = successResponse('Match Making List', top5Exhibitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };

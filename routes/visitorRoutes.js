@@ -101,4 +101,6 @@ router.get('/instant-meeting/:id', passport.authenticate('jwt-visitor', { sessio
 router.get('/instant-meeting-by-stall/:stallId/:visitorId', passport.authenticate('jwt-visitor', { session: false }), instantMeetingController.getInstantMeetingByVisitorId);
 router.put('/instant-meeting/:id', passport.authenticate('jwt-visitor', { session: false }), instantMeetingController.updateInstantMeeting);
 
+router.get('/match-making/:visitorId', passport.authenticate('jwt-visitor', { session: false }), visitorController.matchMaking);
+
 module.exports = router;
