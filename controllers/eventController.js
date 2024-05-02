@@ -17,7 +17,6 @@ exports.createEvent = async (req, res) => {
             const successObj = successResponse('Event Created', event)
             res.status(successObj.status).send(successObj);
         } else {
-            console.log(validatedData, '^^^^^^^^^^^6')
             res.status(401).json({ message: validatedData.errors });
         }
     } catch (error) {

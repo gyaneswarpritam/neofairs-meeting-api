@@ -20,6 +20,8 @@ var instantMeetingSchema = new mongoose.Schema(
         },
         approve: { type: Boolean, default: false },
         cancelled: { type: Boolean, default: false },
+        rejected: { type: Boolean, default: false },
+        completed: { type: Boolean, default: false },
     },
     {
         timestamps: true,

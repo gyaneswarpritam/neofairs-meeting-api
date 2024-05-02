@@ -98,5 +98,7 @@ router.get('/list-booked-slots', passport.authenticate('jwt-visitor', { session:
 
 router.post('/instant-meeting', passport.authenticate('jwt-visitor', { session: false }), instantMeetingController.createInstantMeeting);
 router.get('/instant-meeting/:id', passport.authenticate('jwt-visitor', { session: false }), instantMeetingController.getInstantMeetingById);
+router.get('/instant-meeting-by-stall/:stallId/:visitorId', passport.authenticate('jwt-visitor', { session: false }), instantMeetingController.getInstantMeetingByVisitorId);
+router.put('/instant-meeting/:id', passport.authenticate('jwt-visitor', { session: false }), instantMeetingController.updateInstantMeeting);
 
 module.exports = router;
