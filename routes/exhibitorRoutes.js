@@ -18,6 +18,7 @@ const VisitedStallController = require('../controllers/VisitedStallController');
 const briefCaseController = require('../controllers/briefCaseController');
 const slotsController = require('../controllers/slotsController');
 const instantMeetingController = require('../controllers/instantMeetingController');
+const notificationController = require('../controllers/notificationController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -74,5 +75,8 @@ router.post('/change-status', passport.authenticate('jwt-exhibitor', { session: 
 
 router.get('/instant-meeting/:exhibitorId', passport.authenticate('jwt-exhibitor', { session: false }), instantMeetingController.getInstantMeetingByExhibitorId);
 router.put('/instant-meeting/:id', passport.authenticate('jwt-exhibitor', { session: false }), instantMeetingController.updateInstantMeeting);
+
+router.post('/notification', passport.authenticate('jwt-exhibitor', { session: false }), notificationController.createExhibitorNotification);
+router.get('/notification', passport.authenticate('jwt-exhibitor', { session: false }), notificationController.getExhibitorNotification);
 
 module.exports = router;
