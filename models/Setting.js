@@ -2,6 +2,9 @@ var mongoose = require("mongoose");
 
 var settingSchema = new mongoose.Schema(
     {
+        location: { type: String, required: true },
+        country: { type: String, required: true },
+        fairName: { type: String, required: true },
         startDateTime: { type: String, required: true },
         endDateTime: { type: String, required: true },
         timezone: { type: String, required: true },

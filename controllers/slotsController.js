@@ -4,6 +4,7 @@ const { EXB_DURATION_IN_MINUTES_PER_SLOT, EXB_END_TIME_IN_UTC, EXB_FROM_IN_UTC, 
 const Slots = require("../models/slots.js");
 const Visitor = require("../models/Visitor.js");
 const Exhibitor = require("../models/Exhibitor.js");
+const Setting = require("../models/Setting.js");
 
 exports.listExhibitors = async (req, res) => {
   try {
@@ -440,22 +441,44 @@ exports.listBookedSlots = async (req, res) => {
 
 exports.getExhibitionDate = (req, res) => {
   const { timeZone } = req.query;
-  const slotStartDateTimeInRequestedTimeZone = momentTimeZone(EXB_FROM_IN_UTC)
-    .tz(timeZone)
-    .format("YYYY-MM-DD");
 
-  const slotEndDateTimeInRequestedTimeZone = momentTimeZone(EXB_TO_IN_UTC)
-    .tz(timeZone)
-    .format("YYYY-MM-DD");
+  // Fetch settings from the database
+  Setting.findOne({ active: true, deleted: false })
+    .then(setting => {
+      if (!setting) {
+        return res.status(404).json({
+          success: false,
+          message: "Settings not found"
+        });
+      }
 
-  return res.status(200).json({
-    success: true,
-    data: {
-      startDate: slotStartDateTimeInRequestedTimeZone,
-      endDate: slotEndDateTimeInRequestedTimeZone,
-    },
-  });
+      const { startDateTime, endDateTime } = setting;
+
+      // Convert startDateTime and endDateTime to requested timeZone
+      const slotStartDateTimeInRequestedTimeZone = momentTimeZone(startDateTime)
+        .tz(timeZone)
+        .format("YYYY-MM-DD");
+
+      const slotEndDateTimeInRequestedTimeZone = momentTimeZone(endDateTime)
+        .tz(timeZone)
+        .format("YYYY-MM-DD");
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          startDate: slotStartDateTimeInRequestedTimeZone,
+          endDate: slotEndDateTimeInRequestedTimeZone,
+        },
+      });
+    })
+    .catch(err => {
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    });
 };
+
 
 exports.getVisitorsList = async (req, res) => {
   try {

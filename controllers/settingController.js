@@ -38,7 +38,8 @@ exports.getSettingById = async (req, res) => {
         if (!setting) {
             return res.status(404).json({ message: 'Setting not found' });
         }
-        res.json(setting);
+        const successObj = successResponse('Setting Details', setting)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
