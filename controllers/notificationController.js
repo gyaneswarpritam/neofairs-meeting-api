@@ -25,9 +25,9 @@ exports.createExhibitorNotification = async (req, res) => {
 
 exports.getVisitorNotification = async (req, res) => {
     try {
-        const visitorNotify = await VisitorNotification.find({})
+        const visitorNotify = await VisitorNotification.find({ visitor: req.params.visitorId, unread: false })
             .populate({
-                path: 'Exhibitor',
+                path: 'exhibitor',
                 select: 'firstName lastName companyName email phoneNo' // Select only the fields you need
             })
             .sort({ createdAt: -1 })
@@ -42,9 +42,9 @@ exports.getVisitorNotification = async (req, res) => {
 
 exports.getExhibitorNotification = async (req, res) => {
     try {
-        const exhibitorNotify = await ExhibitorNotification.find({})
+        const exhibitorNotify = await ExhibitorNotification.find({ exhibitor: req.params.exhibitorId, unread: false })
             .populate({
-                path: 'Visitor',
+                path: 'visitor',
                 select: 'firstName lastName companyName email phoneNo'
             })
             .sort({ createdAt: -1 })

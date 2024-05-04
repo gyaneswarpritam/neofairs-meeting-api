@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 
 var exhibitorNotification = new mongoose.Schema(
     {
-        trackEventType: { type: String, required: true },
+        notificationType: { type: String, required: true },
         data: { type: Object },
         visitor: {
             type: mongoose.Schema.Types.ObjectId,
@@ -13,6 +13,7 @@ var exhibitorNotification = new mongoose.Schema(
             ref: "Exhibitor"
         },
         ip: { type: String },
+        unread: { type: Boolean, default: false },
     },
     {
         timestamps: true,

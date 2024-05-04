@@ -104,6 +104,6 @@ router.put('/instant-meeting/:id', passport.authenticate('jwt-visitor', { sessio
 
 router.get('/match-making/:visitorId', passport.authenticate('jwt-visitor', { session: false }), visitorController.matchMaking);
 
-router.post('/notification', passport.authenticate('jwt-visitor', { session: false }), notificationController.createVisitorNotification);
-router.get('/notification', passport.authenticate('jwt-visitor', { session: false }), notificationController.getVisitorNotification);
+router.post('/notification', passport.authenticate('jwt-visitor', { session: false }), notificationController.createExhibitorNotification);
+router.get('/notification/:visitorId', passport.authenticate('jwt-visitor', { session: false }), notificationController.getVisitorNotification);
 module.exports = router;

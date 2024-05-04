@@ -76,7 +76,7 @@ router.post('/change-status', passport.authenticate('jwt-exhibitor', { session: 
 router.get('/instant-meeting/:exhibitorId', passport.authenticate('jwt-exhibitor', { session: false }), instantMeetingController.getInstantMeetingByExhibitorId);
 router.put('/instant-meeting/:id', passport.authenticate('jwt-exhibitor', { session: false }), instantMeetingController.updateInstantMeeting);
 
-router.post('/notification', passport.authenticate('jwt-exhibitor', { session: false }), notificationController.createExhibitorNotification);
-router.get('/notification', passport.authenticate('jwt-exhibitor', { session: false }), notificationController.getExhibitorNotification);
+router.post('/notification', passport.authenticate('jwt-exhibitor', { session: false }), notificationController.createVisitorNotification);
+router.get('/notification/:exhibitorId', passport.authenticate('jwt-exhibitor', { session: false }), notificationController.getExhibitorNotification);
 
 module.exports = router;
