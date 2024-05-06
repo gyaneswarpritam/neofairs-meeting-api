@@ -90,6 +90,40 @@ exports.getAllVisitedStallForExhibitor = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+exports.getLiveVisitedStallForExhibitor = async (req, res) => {
+    try {
+        const visitedStalls = await VisitedStall.find({ exhibitor: req.params.exhibitorId })
+            .populate({
+                path: 'visitor',
+                select: 'firstName lastName companyName email phoneNo loggedIn',
+                match: { loggedIn: true } // Filter to retrieve only visitors who are logged in
+            })
+            .populate({
+                path: 'stall',
+                select: 'stallName'
+            })
+            .exec();
+
+        if (!visitedStalls || visitedStalls.length === 0) {
+            return res.status(404).json({ message: 'No visited stalls found for this exhibitor' });
+        }
+
+        // Map the visited stalls to extract required information
+        const stallList = visitedStalls.map(stall => ({
+            visitor: stall.visitor.firstName + " " + stall.visitor.lastName,
+            companyName: stall.visitor.companyName,
+            visitorEmail: stall.visitor.email,
+            visitorPhone: stall.visitor.phoneNo,
+            updatedAt: stall.updatedAt
+        }));
+
+        const successObj = successResponse('Visited Stall List', stallList);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 
 exports.getStallById = async (req, res) => {
