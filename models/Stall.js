@@ -4,6 +4,7 @@ var stallSchema = new mongoose.Schema(
     {
         stallName: { type: String, required: true },
         stallDescription: { type: String },
+        certifications: { type: Object },
         hallId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "hall"
