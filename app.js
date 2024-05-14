@@ -66,6 +66,7 @@ const io = socket(server, {
 global.onlineUsers = new Map();
 io.on("connection", (socket) => {
     global.chatSocket = socket;
+
     socket.on("add-user", (userId) => {
         onlineUsers.set(userId, socket.id);
     });
@@ -76,4 +77,28 @@ io.on("connection", (socket) => {
             socket.to(sendUserSocket).emit("msg-recieve", data.msg);
         }
     });
+
+    // Handle disconnection
+    socket.on("disconnect", () => {
+        // Remove disconnected user from the map
+        onlineUsers.forEach((value, key) => {
+            if (value === socket.id) {
+                onlineUsers.delete(key);
+            }
+        });
+    });
 });
+
+// io.on("connection", (socket) => {
+//     global.chatSocket = socket;
+//     socket.on("add-user", (userId) => {
+//         onlineUsers.set(userId, socket.id);
+//     });
+
+//     socket.on("send-msg", (data) => {
+//         const sendUserSocket = onlineUsers.get(data.to);
+//         if (sendUserSocket) {
+//             socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+//         }
+//     });
+// });
