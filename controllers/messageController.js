@@ -25,32 +25,48 @@ module.exports.getMessages = async (req, res, next) => {
 };
 
 module.exports.getChatUser = async (req, res, next) => {
-  const visitorId = req.params.id; // Assuming visitorId is passed as a route parameter
+  const visitorId = req.params.id;
 
   try {
-    // Find messages where the current user (visitor) is either the sender or receiver
     const messages = await Messages.find({
       users: { $in: [visitorId] }
     });
-    // Extract unique user IDs from the messages
-    const userIds = new Set();
+
+    const userChatInfo = {};
     messages.forEach(message => {
       message.users.forEach(user => {
-        if (user !== visitorId) { // Check if the user is not the current visitor
-          userIds.add(user); // Add the user ID to the set
+        if (user !== visitorId) {
+          if (!userChatInfo[user]) {
+            userChatInfo[user] = {
+              unread: 0,
+              lastMessage: null,
+            };
+          }
+          if (!userChatInfo[user].lastMessage || message.updatedAt > userChatInfo[user].lastMessage.updatedAt) {
+            userChatInfo[user].lastMessage = message;
+          }
+          if (!message.read && message.sender.toString() !== visitorId) {
+            userChatInfo[user].unread++;
+          }
         }
       });
     });
 
-    // Fetch user details for the extracted user IDs
-    const visitors = await Visitor.find({ _id: { $in: Array.from(userIds) } });
-    const modifiedVisitors = visitors.map(visitor => ({
-      _id: visitor._id,
-      firstName: visitor.firstName,
-      lastName: visitor.lastName,
-      email: visitor.email,
-      companyName: visitor.companyName,
-    }));
+    const userIds = Object.keys(userChatInfo);
+    const visitors = await Visitor.find({ _id: { $in: userIds } });
+    const modifiedVisitors = visitors.map(visitor => {
+      const chatInfo = userChatInfo[visitor._id.toString()];
+      return {
+        _id: visitor._id,
+        firstName: visitor.firstName,
+        lastName: visitor.lastName,
+        email: visitor.email,
+        companyName: visitor.companyName,
+        unread: chatInfo.unread,
+        lastMessage: chatInfo.lastMessage.message.text,
+      };
+    });
+
     const successObj = successResponse('Chat Visitor List', modifiedVisitors);
     res.status(successObj.status).send(successObj);
   } catch (err) {
@@ -61,7 +77,6 @@ module.exports.getChatUser = async (req, res, next) => {
 
 module.exports.checkChatUserExist = async (req, res, next) => {
   try {
-    // Check if a message with the same sender and receiver IDs exists
     const existingMessage = await Messages.findOne({
       users: { $all: [req.body.from, req.body.to] }
     });
@@ -86,5 +101,27 @@ module.exports.addMessage = async (req, res, next) => {
     else return res.json({ msg: "Failed to add message to the database" });
   } catch (ex) {
     next(ex);
+  }
+};
+
+module.exports.markMessagesAsRead = async (req, res, next) => {
+  try {
+    const { from, to } = req.body;
+
+    await Messages.updateMany(
+      {
+        users: { $all: [from, to] },
+        sender: to,
+        read: false,
+      },
+      {
+        $set: { read: true },
+      }
+    );
+
+    res.status(200).json({ message: "Messages marked as read." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
