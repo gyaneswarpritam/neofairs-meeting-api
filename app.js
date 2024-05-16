@@ -18,6 +18,7 @@ const exhibitorRoutes = require('./routes/exhibitorRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const exhibitorMessageRoutes = require('./routes/exhibitorMessageRoutes');
 
 // Initialize Express app
 const app = express();
@@ -47,6 +48,7 @@ app.use('/api/exhibitor', exhibitorRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/exhibitor-messages", exhibitorMessageRoutes);
 
 // Setup Swagger
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
