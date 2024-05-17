@@ -11,6 +11,10 @@ const ExhibitorMessages = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    read: {
+      type: Boolean,
+      default: false
+    },
   },
   {
     timestamps: true,
