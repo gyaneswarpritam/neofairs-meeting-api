@@ -6,6 +6,7 @@ const schemaValidator = require('../validators/schemaValidator');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/config');
 const { successResponse, notFoundResponse } = require('../utils/sendResponse');
+const emailController = require("./emailController");
 
 exports.register = async (req, res) => {
     try {
@@ -24,7 +25,7 @@ exports.register = async (req, res) => {
 
             // Save the exhibitor to the database
             await exhibitor.save();
-
+            const emailData = await emailController.sendRegisteredMail(exhibitor);
             // Respond with success message
             res.status(201).json({ message: 'Exhibitor registered successfully' });
         } else {

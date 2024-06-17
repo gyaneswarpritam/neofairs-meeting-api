@@ -9,6 +9,7 @@ const { sendEmail } = require('../utils/emailService');
 const { sendSMS } = require('../utils/smsService');
 const adminSchema = require('../validators/adminValidator');
 const schemaValidator = require('../validators/schemaValidator');
+const emailController = require("./emailController");
 
 exports.register = async (req, res) => {
     try {
@@ -195,6 +196,7 @@ exports.fetchAllExhibitor = async (req, res) => {
 exports.approveVisitor = async (req, res) => {
     const { visitorId } = req.params;
     try {
+        let passwordData = req.body.password;
         // Check if the request body contains a password
         if (req.body.password) {
             // Hash the password using bcrypt
@@ -207,6 +209,7 @@ exports.approveVisitor = async (req, res) => {
         if (!visitor) {
             return res.status(404).json({ message: 'Visitor not found' });
         }
+        const emailData = await emailController.sendApprovalVisitorMail(visitor, passwordData);
         // await sendEmail(visitor.email, 'Approval Notification', 'Your registration has been approved.');
         // await sendSMS(visitor.phoneNumber, 'Congratulations! Your registration has been approved.');
         res.json({ message: 'Visitor approved successfully' });
@@ -218,6 +221,7 @@ exports.approveVisitor = async (req, res) => {
 exports.approveExhibitor = async (req, res) => {
     const { exhibitorId } = req.params;
     try {
+        let passwordData = req.body.password;
         // Check if the request body contains a password
         if (req.body.password) {
             // Hash the password using bcrypt
@@ -230,6 +234,7 @@ exports.approveExhibitor = async (req, res) => {
         if (!exhibitor) {
             return res.status(404).json({ message: 'Exhibitor not found' });
         }
+        const emailData = await emailController.sendApprovalExhibitorMail(exhibitor, passwordData);
         // await sendEmail(exhibitor.email, 'Approval Notification', 'Your registration has been approved.');
         // await sendSMS(exhibitor.phoneNumber, 'Congratulations! Your registration has been approved.');
         res.json({ message: 'Exhibitor approved successfully' });
