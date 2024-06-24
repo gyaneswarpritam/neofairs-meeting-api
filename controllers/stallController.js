@@ -189,20 +189,45 @@ exports.updateStall = async (req, res) => {
                 return res.status(404).json({ message: 'Stall entry not found' });
             }
 
-            // Update products list
-            await ProductsListModel.updateMany({ stall: stall._id }, { $set: { stall: stall._id } });
+            // Helper function to update or insert items
+            const updateOrInsertItems = async (Model, items, stallId) => {
+                const operations = items.map(async (item) => {
+                    if (item._id) {
+                        // Update existing item
+                        return Model.findByIdAndUpdate(item._id, item, { new: true });
+                    } else {
+                        // Insert new item
+                        item.stall = stallId; // Set the stall ID for the new item
+                        const newItem = new Model(item);
+                        return newItem.save();
+                    }
+                });
+                return Promise.all(operations);
+            };
+            // Update or insert products list
+            if (req.body.productsList) {
+                await updateOrInsertItems(ProductsListModel, req.body.productsList, stall._id);
+            }
 
-            // Update company profile list
-            await CompanyProfileListModel.updateMany({ stall: stall._id }, { $set: { stall: stall._id } });
+            // Update or insert company profile list
+            if (req.body.companyProfileList) {
+                await updateOrInsertItems(CompanyProfileListModel, req.body.companyProfileList, stall._id);
+            }
 
-            // Update gallery image list
-            await GalleryImageListModel.updateMany({ stall: stall._id }, { $set: { stall: stall._id } });
+            // Update or insert gallery image list
+            if (req.body.galleryImageList) {
+                await updateOrInsertItems(GalleryImageListModel, req.body.galleryImageList, stall._id);
+            }
 
-            // Update gallery video list
-            await GalleryVideoListModel.updateMany({ stall: stall._id }, { $set: { stall: stall._id } });
+            // Update or insert gallery video list
+            if (req.body.galleryVideoList) {
+                await updateOrInsertItems(GalleryVideoListModel, req.body.galleryVideoList, stall._id);
+            }
 
-            // Update stall video list
-            await StallVideoListModel.updateMany({ stall: stall._id }, { $set: { stall: stall._id } });
+            // Update or insert stall video list
+            if (req.body.stallVideoList) {
+                await updateOrInsertItems(StallVideoListModel, req.body.stallVideoList, stall._id);
+            }
 
             const successObj = successResponse('Stall updated', stall);
             res.status(successObj.status).send(successObj);
