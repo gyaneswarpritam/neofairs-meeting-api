@@ -23,6 +23,7 @@ const slotsController = require('../controllers/slotsController');
 const instantMeetingController = require('../controllers/instantMeetingController');
 const notificationController = require('../controllers/notificationController');
 const auditoriumController = require('../controllers/auditoriumController');
+const flashMessageController = require('../controllers/flashMessageController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -110,4 +111,6 @@ router.post('/notification', passport.authenticate('jwt-visitor', { session: fal
 router.get('/notification/:visitorId', passport.authenticate('jwt-visitor', { session: false }), notificationController.getVisitorNotification);
 
 router.get('/auditorium', passport.authenticate('jwt-visitor', { session: false }), auditoriumController.getAllAuditorium);
+router.get('/flashMessage', passport.authenticate('jwt-visitor', { session: false }), flashMessageController.getAllFlashMessage);
+
 module.exports = router;
