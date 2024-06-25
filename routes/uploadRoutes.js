@@ -6,8 +6,8 @@ const cloudUploadHandler = require('./cloudStorage/handler');
 const multerMid = multer({
     storage: multer.memoryStorage(),
     limits: {
-        // no larger than 5mb.
-        fileSize: 5 * 1024 * 1024,
+        // no larger than 11mb.
+        fileSize: 11 * 1024 * 1024,
     },
 });
 

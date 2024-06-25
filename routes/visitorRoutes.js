@@ -70,6 +70,7 @@ router.get('/settings', settingController.getAllSettings);
 
 /*Stall Route*/
 router.get('/all-stall', passport.authenticate('jwt-visitor', { session: false }), stallController.getAllStall);
+router.get('/exhibitor-info', stallController.getAllStall);
 router.get('/stall/:id/:visitorId', passport.authenticate('jwt-visitor', { session: false }), stallController.getByVisitorByStallById);
 
 /*location Charges Route*/
