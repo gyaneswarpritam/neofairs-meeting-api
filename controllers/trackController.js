@@ -40,7 +40,7 @@ exports.getTrackVisitor = async (req, res) => {
         // const totalPages = Math.ceil(totalCount / limit);
         // const currentPage = Math.ceil(offset / limit) + 1;
         const successObj = successResponseWithRecordCount('Track Visitor List', visitedStalls, totalCount);
-        res.status(successObj.status).send(successObj);
+        res.status(200).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
