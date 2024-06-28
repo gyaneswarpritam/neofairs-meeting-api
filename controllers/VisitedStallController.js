@@ -73,7 +73,8 @@ exports.getAllVisitedStallForExhibitor = async (req, res) => {
             })
             .exec();
         if (!visitedStalls || visitedStalls.length === 0) {
-            return res.status(404).json({ message: 'No visited stalls found for this exhibitor' });
+            const successObj = successResponse('No visited stalls found for this exhibitor', []);
+            res.status(successObj.status).send(successObj);
         }
 
         // Map the visited stalls to extract required information
@@ -106,7 +107,8 @@ exports.getLiveVisitedStallForExhibitor = async (req, res) => {
             .exec();
 
         if (!visitedStalls || visitedStalls.length === 0) {
-            return res.status(404).json({ message: 'No visited stalls found for this exhibitor' });
+            const successObj = successResponse('No visited stalls found for this exhibitor', []);
+            res.status(successObj.status).send(successObj);
         }
 
         // Map the visited stalls to extract required information
