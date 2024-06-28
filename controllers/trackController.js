@@ -39,8 +39,8 @@ exports.getTrackVisitor = async (req, res) => {
         const totalCount = await TrackVisitor.countDocuments();
         // const totalPages = Math.ceil(totalCount / limit);
         // const currentPage = Math.ceil(offset / limit) + 1;
-        const successObj = successResponseWithRecordCount('Track Visitor List', visitedStalls, totalCount);
-        res.status(200).send(successObj);
+        const successObj = successResponse('Visitor Track list', visitedStalls)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
