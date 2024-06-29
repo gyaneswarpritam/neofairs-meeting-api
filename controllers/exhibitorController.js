@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
             // Check if email is already registered
             const existingExhibitor = await Exhibitor.findOne({ email });
             if (existingExhibitor) {
-                return res.status(400).json({ message: 'Email already exists' });
+                return res.status(500).json({ status: 0, message: 'Email already exists' });
             }
 
             // Create a new exhibitor
@@ -27,9 +27,9 @@ exports.register = async (req, res) => {
             await exhibitor.save();
             const emailData = await emailController.sendRegisteredMail(exhibitor);
             // Respond with success message
-            res.status(201).json({ message: 'Exhibitor registered successfully' });
+            res.status(201).json({ status: 1, message: 'Exhibitor registered successfully' });
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ status: 0, message: validation.errors });
         }
 
     } catch (error) {
@@ -46,7 +46,7 @@ exports.login = async (req, res, next) => {
             const { email, password } = req.body;
             const exhibitor = await Exhibitor.findOne({ email, active: true });
             if (!exhibitor) {
-                return res.status(404).json({ message: 'Exhibitor not found' });
+                return res.status(404).json({ status: 0, message: 'Exhibitor not found' });
             }
 
             // Check password
@@ -81,14 +81,14 @@ exports.login = async (req, res, next) => {
                     }
                 );
             } else {
-                return res.status(400).json({ message: 'Username/Password is incorrect' });
+                return res.status(400).json({ status: 0, message: 'Username/Password is incorrect' });
             }
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ status: 0, message: validation.errors });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ status: 0, message: 'Internal server error' });
     }
 };
 exports.getAllExhibitor = async (req, res) => {

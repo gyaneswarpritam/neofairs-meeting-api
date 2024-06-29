@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
             // Check if email is already registered
             const existingVisitor = await Visitor.findOne({ email });
             if (existingVisitor) {
-                return res.status(400).json({ message: 'Email already exists' });
+                return res.status(400).json({ status: 0, message: 'Email already exists' });
             }
 
             // Create a new visitor
@@ -31,13 +31,13 @@ exports.register = async (req, res) => {
             const visitorData = await visitor.save();
             const emailData = await emailController.sendRegisteredMail(visitorData);
             // Respond with success message
-            res.status(201).json({ message: 'Visitor registered successfully' });
+            res.status(201).json({ status: 1, message: 'Visitor registered successfully' });
         } else {
             res.status(401).json({ message: validation.errors });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ status: 0, message: 'Internal server error' });
     }
 };
 
@@ -50,7 +50,7 @@ exports.login = async (req, res, next) => {
             // Find admin by email
             const visitor = await Visitor.findOne({ email, active: true });
             if (!visitor) {
-                return res.status(404).json({ message: 'Visitor not found' });
+                return res.status(404).json({ status: 0, message: 'Visitor not found' });
             }
 
             // Check password
@@ -85,14 +85,14 @@ exports.login = async (req, res, next) => {
                     }
                 );
             } else {
-                return res.status(400).json({ message: 'Username/Password is incorrect' });
+                return res.status(400).json({ status: 0, message: 'Username/Password is incorrect' });
             }
         } else {
-            res.status(401).json({ message: validation.errors });
+            res.status(401).json({ status: 0, message: validation.errors });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ status: 0, message: 'Internal server error' });
     }
 };
 
