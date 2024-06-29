@@ -42,6 +42,7 @@ exports.getAllVisitedStallForVisitor = async (req, res) => {
         if (!visitedStalls || visitedStalls.length === 0) {
             const successObj = successResponse('No visited stalls found for this visitor', []);
             res.status(successObj.status).send(successObj);
+            return;
         }
 
         // Map the visited stalls to extract required information
