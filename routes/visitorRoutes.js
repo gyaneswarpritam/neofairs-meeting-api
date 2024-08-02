@@ -24,6 +24,8 @@ const instantMeetingController = require('../controllers/instantMeetingControlle
 const notificationController = require('../controllers/notificationController');
 const auditoriumController = require('../controllers/auditoriumController');
 const flashMessageController = require('../controllers/flashMessageController');
+const likeController = require('../controllers/likeController');
+const reviewController = require('../controllers/reviewController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -112,5 +114,11 @@ router.get('/notification/:visitorId', passport.authenticate('jwt-visitor', { se
 
 router.get('/auditorium', passport.authenticate('jwt-visitor', { session: false }), auditoriumController.getAllAuditorium);
 router.get('/flashMessage', passport.authenticate('jwt-visitor', { session: false }), flashMessageController.getAllFlashMessage);
+
+// Route to add a like
+router.post('/add-like', passport.authenticate('jwt-visitor', { session: false }), likeController.addLike);
+
+// Route to add a review
+router.post('/review', passport.authenticate('jwt-visitor', { session: false }), reviewController.addReview);
 
 module.exports = router;

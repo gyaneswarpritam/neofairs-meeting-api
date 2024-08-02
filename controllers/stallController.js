@@ -9,6 +9,8 @@ const GalleryImageListModel = require('../models/GalleryImageList');
 const GalleryVideoListModel = require('../models/GalleryVideoList');
 const CompanyProfileListModel = require('../models/CompanyProfileList');
 const Briefcase = require('../models/Briefcase');
+const Like = require('../models/Like');
+const Review = require('../models/Review');
 
 exports.createStall = async (req, res) => {
     try {
@@ -103,7 +105,6 @@ exports.getByVisitorByStallById = async (req, res) => {
         const visitorId = req.params.visitorId;
 
         const stall = await Stall.findById(stallId);
-
         if (!stall) {
             const notFoundObj = notFoundResponse('Stall entry not found for this exhibitor');
             return res.status(notFoundObj.status).send(notFoundObj);
@@ -115,21 +116,24 @@ exports.getByVisitorByStallById = async (req, res) => {
         const galleryVideoList = await GalleryVideoListModel.find({ stall: stall._id });
         const stallVideoList = await StallVideoListModel.find({ stall: stall._id });
 
-        // Fetch briefcase items for the stall and visitor
-        const briefcaseItems = await Briefcase.find({ stall: stall._id, visitor: visitorId }).select('product');
+        // Fetch likes and reviews for the stall and visitor
+        const likes = await Like.find({ stall: stall._id, visitor: visitorId }).select('productList');
+        const reviews = await Review.find({ stall: stall._id, visitor: visitorId }).select('productList review');
 
-        // Create a set of product IDs in the briefcase for quick lookup
-        const briefcaseProductIds = new Set(briefcaseItems.map(item => item.product.toString()));
+        // Create sets for quick lookup
+        const likedProductIds = new Set(likes.map(like => like.productList.toString()));
+        const reviewsMap = new Map(reviews.map(review => [review.productList.toString(), review.review]));
 
-        // Add briefcase flag to each product
-        const productsWithBriefcaseFlag = productsList.map(product => ({
+        // Add like and review flags to each product
+        const productsWithInteractionFlags = productsList.map(product => ({
             ...product.toObject(),
-            briefcase: briefcaseProductIds.has(product._id.toString())
+            liked: likedProductIds.has(product._id.toString()),
+            review: reviewsMap.get(product._id.toString()) || 0
         }));
 
         const successObj = successResponse('Stall List', {
             stall,
-            productsList: productsWithBriefcaseFlag,
+            productsList: productsWithInteractionFlags,
             companyProfileList,
             galleryImageList,
             galleryVideoList,
@@ -156,28 +160,76 @@ exports.getStallByHallId = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 exports.getStallByExhibitor = async (req, res) => {
     try {
-        const stall = await Stall.findOne({ exhibitor: req.params.exhibitor })
+        const stall = await Stall.findOne({ exhibitor: req.params.exhibitor });
 
         if (!stall) {
             const notFoundObj = notFoundResponse('Stall entry not found for this exhibitor');
-            res.status(notFoundObj.status).send(notFoundObj);
-        } else {
-            const productsList = await ProductsListModel.find({ stall: stall._id });
-            const companyProfileList = await CompanyProfileListModel.find({ stall: stall._id });
-            const galleryImageList = await GalleryImageListModel.find({ stall: stall._id });
-            const galleryVideoList = await GalleryVideoListModel.find({ stall: stall._id });
-            const stallVideoList = await StallVideoListModel.find({ stall: stall._id });
-
-            const successObj = successResponse('Stall List', { stall, productsList, companyProfileList, galleryImageList, galleryVideoList, stallVideoList });
-            res.status(successObj.status).send(successObj);
+            return res.status(notFoundObj.status).send(notFoundObj);
         }
+
+        const productsList = await ProductsListModel.find({ stall: stall._id });
+        const companyProfileList = await CompanyProfileListModel.find({ stall: stall._id });
+        const galleryImageList = await GalleryImageListModel.find({ stall: stall._id });
+        const galleryVideoList = await GalleryVideoListModel.find({ stall: stall._id });
+        const stallVideoList = await StallVideoListModel.find({ stall: stall._id });
+
+        // Fetch likes and reviews for the stall
+        const likes = await Like.find({ stall: stall._id }).select('productList');
+        const reviews = await Review.find({ stall: stall._id }).select('productList review visitor');
+
+        // Count total likes for each product
+        const likeCounts = likes.reduce((acc, like) => {
+            acc[like.productList] = (acc[like.productList] || 0) + 1;
+            return acc;
+        }, {});
+
+        // Calculate average review ratings and unique visitors count
+        const reviewStats = await Review.aggregate([
+            { $match: { stall: stall._id } },
+            {
+                $group: {
+                    _id: "$productList",
+                    averageReview: { $avg: "$review" },
+                    uniqueVisitors: { $addToSet: "$visitor" } // Collect unique visitors
+                }
+            },
+            {
+                $project: {
+                    averageReview: 1,
+                    numberOfVisitors: { $size: "$uniqueVisitors" } // Count unique visitors
+                }
+            }
+        ]);
+
+        const reviewStatsMap = new Map(reviewStats.map(stat => [stat._id.toString(), {
+            averageReview: stat.averageReview,
+            numberOfVisitors: stat.numberOfVisitors
+        }]));
+
+        // Add like counts, average reviews, and visitor counts to each product
+        const productsWithStats = productsList.map(product => ({
+            ...product.toObject(),
+            like: likeCounts[product._id] || 0,
+            review: reviewStatsMap.get(product._id.toString())?.averageReview || 0,
+            reviewVisitors: reviewStatsMap.get(product._id.toString())?.numberOfVisitors || 0
+        }));
+
+        const successObj = successResponse('Stall List', {
+            stall,
+            productsList: productsWithStats,
+            companyProfileList,
+            galleryImageList,
+            galleryVideoList,
+            stallVideoList
+        });
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 exports.updateStall = async (req, res) => {
     try {

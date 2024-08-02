@@ -5,8 +5,6 @@ var galleryImageList = new mongoose.Schema(
         title: { type: String },
         url: { type: String },
         locked: { type: Boolean, default: false },
-        like: { type: String, default: 0 },
-        review: { type: String, default: 0 },
         active: { type: String, default: true },
         deleted: { type: String, default: false },
         stall: {

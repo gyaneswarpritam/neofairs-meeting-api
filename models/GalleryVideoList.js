@@ -4,8 +4,6 @@ var galleryVideoList = new mongoose.Schema(
     {
         title: { type: String },
         url: { type: String },
-        like: { type: String, default: 0 },
-        review: { type: String, default: 0 },
         active: { type: String, default: true },
         deleted: { type: String, default: false },
         stall: {
