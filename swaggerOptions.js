@@ -13,7 +13,7 @@ module.exports = {
                 description: 'Development server'
             },
             {
-                url: 'http://54.210.166.40:5001',
+                url: 'http://100.28.3.126:5001',
                 description: 'Prod server'
             }
             // Add more servers if needed
