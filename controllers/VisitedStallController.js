@@ -1,4 +1,5 @@
 // controllers/stallController.js
+const ProductVisited = require('../models/ProductVisited');
 const VisitedStall = require('../models/VisitedStall');
 const { successResponse, notFoundResponse } = require('../utils/sendResponse');
 
@@ -258,6 +259,43 @@ exports.deleteStall = async (req, res) => {
         res.json({ message: 'Stall entry and associated data deleted' });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+exports.incrementProductVisitCount = async (req, res) => {
+    const { stallId, productId, visitorId } = req.body;
+
+    // Log incoming data for debugging
+    console.log('Incoming Data:', { stallId, productId, visitorId });
+
+    try {
+        // Check if an entry already exists
+        let visitEntry = await ProductVisited.findOne({
+            stall: stallId,
+            productList: productId,
+            visitor: visitorId
+        });
+
+        if (visitEntry) {
+            // If it exists, increment the visitedCount
+            visitEntry.visitedCount += 1;
+            await visitEntry.save();
+        } else {
+            // If it doesn't exist, create a new entry with visitedCount = 1
+            visitEntry = new ProductVisited({
+                stall: stallId,
+                productList: productId,
+                visitor: visitorId,
+                visitedCount: 1
+            });
+            await visitEntry.save();
+        }
+
+        // Assuming successResponse is a utility function to format responses
+        const successObj = successResponse('Product Visited', visitEntry);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating visit count', error });
     }
 };
 

@@ -92,6 +92,7 @@ router.get('/activity', passport.authenticate('jwt-visitor', { session: false })
 router.get('/loggedin-user', passport.authenticate('jwt-visitor', { session: false }), visitorController.getAllLoggedInVisitor);
 router.get('/visited-stall/:visitorId', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.getAllVisitedStallForVisitor);
 router.post('/visited-stall', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.createVisitedStall);
+router.post('/increment-visited-product', passport.authenticate('jwt-visitor', { session: false }), VisitedStallController.incrementProductVisitCount);
 router.post('/add-briefcase', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.createBriefCase);
 router.get('/briefcase/:visitorId', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.getAllBriefcaseForVisitor);
 router.put('/briefcase/:id', passport.authenticate('jwt-visitor', { session: false }), briefCaseController.updateBriefcase);
