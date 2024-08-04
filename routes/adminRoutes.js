@@ -174,5 +174,6 @@ router.get('/joined-exhibitor-report', passport.authenticate('jwt-admin', { sess
 router.get('/catalogue-report', passport.authenticate('jwt-admin', { session: false }), briefCaseController.getAllBriefcaseAdmin);
 router.get('/visitor-tracking-report', passport.authenticate('jwt-admin', { session: false }), trackController.getTrackVisitor);
 // router.get('/exhibitor-tracking-report', passport.authenticate('jwt-admin', { session: false }), reportController.getAllStall);
+router.get('/catalogue-visit-report', passport.authenticate('jwt-admin', { session: false }), adminController.getAllExhibitorsWithProductDetails);
 
 module.exports = router;

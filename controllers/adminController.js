@@ -10,6 +10,12 @@ const { sendSMS } = require('../utils/smsService');
 const adminSchema = require('../validators/adminValidator');
 const schemaValidator = require('../validators/schemaValidator');
 const emailController = require("./emailController");
+const Stall = require('../models/Stall');
+const ProductsList = require('../models/ProductsList');
+const Review = require('../models/Review');
+const Like = require('../models/Like');
+const ProductVisited = require('../models/ProductVisited');
+const { successResponse } = require('../utils/sendResponse');
 
 exports.register = async (req, res) => {
     try {
@@ -243,3 +249,115 @@ exports.approveExhibitor = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+exports.getAllExhibitorsWithProductDetails = async (req, res) => {
+    try {
+        // Fetch all stalls
+        const stalls = await Stall.find({});
+
+        // For each stall, find all product lists and their details
+        const productsWithDetails = await Promise.all(
+            stalls.map(async (stall) => {
+                // Find all product lists associated with the stall
+                const productLists = await ProductsList.find({ stall: stall._id });
+
+                // For each product list, calculate like count, average review, and total visit count
+                return Promise.all(
+                    productLists.map(async (productList) => {
+                        // Count likes
+                        const likeCount = await Like.countDocuments({ productList: productList._id });
+
+                        // Calculate average review rating
+                        const reviews = await Review.find({ productList: productList._id });
+                        const reviewSum = reviews.reduce((sum, review) => sum + review.review, 0);
+                        const reviewCount = reviews.length;
+                        const averageReview = reviewCount > 0 ? reviewSum / reviewCount : 0;
+
+                        // Calculate total visit count
+                        const visits = await ProductVisited.find({ productList: productList._id });
+                        const totalVisitCount = visits.reduce((sum, visit) => sum + visit.visitedCount, 0);
+
+                        return {
+                            ...productList._doc,
+                            stallName: stall.stallName,
+                            like: likeCount,
+                            review: averageReview,
+                            totalVisitCount
+                        };
+                    })
+                );
+            })
+        );
+
+        // Flatten the array of arrays
+        const flattenedProductsWithDetails = productsWithDetails.flat();
+
+        const successObj = successResponse('Products with details', flattenedProductsWithDetails);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching products with details', error });
+    }
+};
+
+
+// exports.getAllExhibitorsWithProductDetails = async (req, res) => {
+//     try {
+//         // Fetch all exhibitors
+//         const exhibitors = await Exhibitor.find({});
+
+//         // For each exhibitor, fetch their respective stall and product details
+//         const exhibitorsWithProductDetails = await Promise.all(
+//             exhibitors.map(async (exhibitor) => {
+//                 // Find the stall associated with the exhibitor
+//                 const stall = await Stall.findOne({ exhibitor: exhibitor._id });
+
+//                 // If no stall is found, skip to the next exhibitor
+//                 if (!stall) {
+//                     return {
+//                         ...exhibitor._doc,
+//                         products: []
+//                     };
+//                 }
+
+//                 // Find all product lists associated with the stall
+//                 const productLists = await ProductsList.find({ stall: stall._id });
+
+//                 // For each product list, calculate like count, average review, and total visit count
+//                 const productsWithDetails = await Promise.all(
+//                     productLists.map(async (productList) => {
+//                         // Count likes
+//                         const likeCount = await Like.countDocuments({ productList: productList._id });
+
+//                         // Calculate average review rating
+//                         const reviews = await Review.find({ productList: productList._id });
+//                         const reviewSum = reviews.reduce((sum, review) => sum + review.review, 0);
+//                         const reviewCount = reviews.length;
+//                         const averageReview = reviewCount > 0 ? reviewSum / reviewCount : 0;
+
+//                         // Calculate total visit count
+//                         const visits = await ProductVisited.find({ productList: productList._id });
+//                         const totalVisitCount = visits.reduce((sum, visit) => sum + visit.visitedCount, 0);
+
+//                         return {
+//                             ...productList._doc,
+//                             like: likeCount,
+//                             review: averageReview,
+//                             totalVisitCount
+//                         };
+//                     })
+//                 );
+
+//                 return {
+//                     ...exhibitor._doc,
+//                     products: productsWithDetails
+//                 };
+//             })
+//         );
+
+//         const successObj = successResponse('Exhibitors with product details', exhibitorsWithProductDetails);
+//         res.status(successObj.status).send(successObj);
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ message: 'Error fetching exhibitors with product details', error });
+//     }
+// };
