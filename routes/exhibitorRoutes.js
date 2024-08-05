@@ -89,6 +89,9 @@ router.get('/flashMessage', passport.authenticate('jwt-exhibitor', { session: fa
 router.get('/likes/:exhibitorId', passport.authenticate('jwt-exhibitor', { session: false }), likeController.getProductsAndLikeCounts);
 router.get('/reviews/:exhibitorId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getAverageReviewsByExhibitorId);
 router.get('/visited-product-count/:exhibitorId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getVisitedProductExhibitorId);
+router.get('/visitor-by-product/:productListId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getVisitorsByMostViewed);
+router.get('/visitor-by-reviewed/:productListId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getVisitorsByMostReviewed);
+router.get('/visitor-by-liked/:productListId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getVisitorsByMostLiked);
 
 
 module.exports = router;

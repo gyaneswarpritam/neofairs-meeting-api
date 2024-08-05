@@ -1,5 +1,6 @@
 // controllers/reviewController.js
 
+const Like = require("../models/Like");
 const ProductsList = require("../models/ProductsList");
 const ProductVisited = require("../models/ProductVisited");
 const Review = require("../models/Review");
@@ -108,3 +109,107 @@ exports.getVisitedProductExhibitorId = async (req, res) => {
         res.status(500).json({ message: 'Error fetching products with visit counts', error });
     }
 };
+
+exports.getVisitorsByMostViewed = async (req, res) => {
+    const { productListId } = req.params;
+
+    try {
+        // Find all ProductVisited entries by productList ID and populate the visitor details
+        const productVisitedEntries = await ProductVisited.find({ productList: productListId })
+            .populate('visitor', 'firstName lastName email phoneNo companyName');
+
+        // If no ProductVisited entries are found, return a 404 error
+        if (!productVisitedEntries || productVisitedEntries.length === 0) {
+            return res.status(404).json({ message: 'No visitors found for this product list' });
+        }
+
+        // Extract visitor details from the ProductVisited entries and combine firstName and lastName into fullName
+        const visitors = productVisitedEntries.map(entry => {
+            const { firstName, lastName, email, phoneNo, companyName } = entry.visitor;
+            const visitorName = `${firstName || ''} ${lastName || ''}`.trim();
+            const visitorEmail = email;
+            const visitorPhone = phoneNo;
+            return {
+                visitorName,
+                visitorEmail,
+                visitorPhone,
+                companyName
+            };
+        });
+
+        const successObj = successResponse('Visitor details', visitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching visitor details', error });
+    }
+};
+
+
+exports.getVisitorsByMostReviewed = async (req, res) => {
+    const { productListId } = req.params;
+
+    try {
+        // Find all Review entries by productList ID and populate the visitor details
+        const reviewEntries = await Review.find({ productList: productListId })
+            .populate('visitor', 'firstName lastName email phoneNo companyName');
+
+        // If no ProductVisited entries are found, return a 404 error
+        if (!reviewEntries || reviewEntries.length === 0) {
+            return res.status(404).json({ message: 'No visitors found for this product list' });
+        }
+
+        // Extract visitor details from the ProductVisited entries and combine firstName and lastName into fullName
+        const visitors = reviewEntries.map(entry => {
+            const { firstName, lastName, email, phoneNo, companyName } = entry.visitor;
+            const visitorName = `${firstName || ''} ${lastName || ''}`.trim();
+            const visitorEmail = email;
+            const visitorPhone = phoneNo;
+            return {
+                visitorName,
+                visitorEmail,
+                visitorPhone,
+                companyName
+            };
+        });
+
+        const successObj = successResponse('Visitor details', visitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching visitor details', error });
+    }
+};
+
+exports.getVisitorsByMostLiked = async (req, res) => {
+    const { productListId } = req.params;
+
+    try {
+        // Find all Like entries by productList ID and populate the visitor details
+        const likeEntries = await Like.find({ productList: productListId })
+            .populate('visitor', 'firstName lastName email phoneNo companyName');
+
+        // If no ProductVisited entries are found, return a 404 error
+        if (!likeEntries || likeEntries.length === 0) {
+            return res.status(404).json({ message: 'No visitors found for this product list' });
+        }
+
+        // Extract visitor details from the ProductVisited entries and combine firstName and lastName into fullName
+        const visitors = likeEntries.map(entry => {
+            const { firstName, lastName, email, phoneNo, companyName } = entry.visitor;
+            const visitorName = `${firstName || ''} ${lastName || ''}`.trim();
+            const visitorEmail = email;
+            const visitorPhone = phoneNo;
+            return {
+                visitorName,
+                visitorEmail,
+                visitorPhone,
+                companyName
+            };
+        });
+
+        const successObj = successResponse('Visitor details', visitors);
+        res.status(successObj.status).send(successObj);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching visitor details', error });
+    }
+};
+
