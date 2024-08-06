@@ -23,6 +23,8 @@ const auditoriumController = require('../controllers/auditoriumController');
 const flashMessageController = require('../controllers/flashMessageController');
 const likeController = require('../controllers/likeController');
 const reviewController = require('../controllers/reviewController');
+const productsListController = require('../controllers/productsListController');
+const companyProfileController = require('../controllers/companyProfileController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -92,6 +94,12 @@ router.get('/visited-product-count/:exhibitorId', passport.authenticate('jwt-exh
 router.get('/visitor-by-product/:productListId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getVisitorsByMostViewed);
 router.get('/visitor-by-reviewed/:productListId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getVisitorsByMostReviewed);
 router.get('/visitor-by-liked/:productListId', passport.authenticate('jwt-exhibitor', { session: false }), reviewController.getVisitorsByMostLiked);
+
+router.put('/productList/:id', passport.authenticate('jwt-exhibitor', { session: false }), productsListController.updateProduct);
+router.delete('/productList/:id', passport.authenticate('jwt-exhibitor', { session: false }), productsListController.deleteProduct);
+
+router.put('/companyProfileList/:id', passport.authenticate('jwt-exhibitor', { session: false }), companyProfileController.updateCompanyProfile);
+router.delete('/companyProfileList/:id', passport.authenticate('jwt-exhibitor', { session: false }), companyProfileController.deleteCompanyProfile);
 
 
 module.exports = router;

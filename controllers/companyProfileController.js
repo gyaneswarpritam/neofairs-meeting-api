@@ -1,5 +1,6 @@
 // controllers/companyProfileController.js
-const CompanyProfile = require('../models/companyProfile');
+const CompanyProfileList = require('../models/CompanyProfileList');
+const { successResponse } = require('../utils/sendResponse');
 const companyProfileSchema = require('../validators/companyProfileValidator');
 const schemaValidator = require('../validators/schemaValidator');
 
@@ -7,7 +8,7 @@ exports.createCompanyProfile = async (req, res) => {
     try {
         const validatedData = schemaValidator(companyProfileSchema, req.body);
         if (validatedData.success) {
-            const companyProfile = await CompanyProfile.create(validatedData.data);
+            const companyProfile = await CompanyProfileList.create(validatedData.data);
             const successObj = successResponse('Company Profile Created', companyProfile)
             res.status(successObj.status).send(successObj);
         } else {
@@ -20,7 +21,7 @@ exports.createCompanyProfile = async (req, res) => {
 
 exports.getCompanyProfileById = async (req, res) => {
     try {
-        const companyProfile = await CompanyProfile.findById(req.params.id);
+        const companyProfile = await CompanyProfileList.findById(req.params.id);
         if (!companyProfile) {
             return res.status(404).json({ message: 'Company profile not found' });
         }
@@ -33,17 +34,17 @@ exports.getCompanyProfileById = async (req, res) => {
 
 exports.updateCompanyProfile = async (req, res) => {
     try {
-        const validatedData = schemaValidator(companyProfileSchema, req.body);
-        if (validatedData.success) {
-            const companyProfile = await CompanyProfile.findByIdAndUpdate(req.params.id, validatedData.data, { new: true });
-            if (!companyProfile) {
-                return res.status(404).json({ message: 'Company profile not found' });
-            }
-            const successObj = successResponse('Company profile updated', companyProfile)
-            res.status(successObj.status).send(successObj);
-        } else {
-            res.status(401).json({ message: validatedData.errors });
+        // const validatedData = schemaValidator(companyProfileSchema, req.body);
+        // if (validatedData.success) {
+        const companyProfile = await CompanyProfileList.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!companyProfile) {
+            return res.status(404).json({ message: 'Company profile not found' });
         }
+        const successObj = successResponse('Company profile updated', companyProfile)
+        res.status(successObj.status).send(successObj);
+        // } else {
+        //     res.status(401).json({ message: validatedData.errors });
+        // }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -51,11 +52,12 @@ exports.updateCompanyProfile = async (req, res) => {
 
 exports.deleteCompanyProfile = async (req, res) => {
     try {
-        const companyProfile = await CompanyProfile.findByIdAndDelete(req.params.id);
+        const companyProfile = await CompanyProfileList.findByIdAndDelete(req.params.id);
         if (!companyProfile) {
             return res.status(404).json({ message: 'Company profile not found' });
         }
-        res.json({ message: 'Company profile deleted' });
+        const successObj = successResponse('Company profile deleted', companyProfile)
+        res.status(successObj.status).send(successObj);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
