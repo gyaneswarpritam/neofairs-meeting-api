@@ -25,6 +25,9 @@ const likeController = require('../controllers/likeController');
 const reviewController = require('../controllers/reviewController');
 const productsListController = require('../controllers/productsListController');
 const companyProfileController = require('../controllers/companyProfileController');
+const galleryImageListController = require('../controllers/galleryImageListController');
+const galleryVideoController = require('../controllers/galleryVideoController');
+const stallVideoController = require('../controllers/stallVideoController');
 
 // Configure JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -100,6 +103,9 @@ router.delete('/productList/:id', passport.authenticate('jwt-exhibitor', { sessi
 
 router.put('/companyProfileList/:id', passport.authenticate('jwt-exhibitor', { session: false }), companyProfileController.updateCompanyProfile);
 router.delete('/companyProfileList/:id', passport.authenticate('jwt-exhibitor', { session: false }), companyProfileController.deleteCompanyProfile);
+router.delete('/gallery-image/:id', passport.authenticate('jwt-exhibitor', { session: false }), galleryImageListController.deleteGallery);
+router.delete('/gallery-video/:id', passport.authenticate('jwt-exhibitor', { session: false }), galleryVideoController.deleteGalleryVideo);
+router.delete('/stall-video/:id', passport.authenticate('jwt-exhibitor', { session: false }), stallVideoController.deleteStallVideo);
 
 
 module.exports = router;
